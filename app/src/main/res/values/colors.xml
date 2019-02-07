@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 /* //device/apps/common/assets/res/any/colors.xml
 **
 ** Copyright 2008, The Android Open Source Project
@@ -18,16 +17,6 @@
 */
 -->
 <resources>
-    <color name="card_0">#33FFFFFF</color> <!-- card 0 -->
-    <color name="card_2">#eee4da</color> <!-- card 2 -->
-    <color name="card_4">#ede0c8</color> <!-- card 4 -->
-    <color name="card_8">#f2b179</color> <!-- card 8 -->
-    <color name="card_16">#f59563</color> <!-- card 16 -->
-    <color name="card_32">#f67c5f</color> <!-- card 32 -->
-    <color name="card_64">#f65e3b</color> <!-- card 64 -->
-    <color name="card_128">#ff4500</color> <!-- card 128 -->
-    <color name="card_256">#ffff00</color> <!-- card default -->
-
     <color name="pink">#ffc0cb</color> <!-- 粉红色 -->
     <color name="lightpink">#ffb6c1</color> <!-- 亮粉红色 -->
     <color name="white">#ffffff</color> <!-- 白色 -->
@@ -45,7 +34,7 @@
     <color name="papayawhip">#ffefd5</color> <!-- 番木色 -->
     <color name="blanchedalmond">#ffebcd</color> <!-- 白杏色 -->
     <color name="mistyrose">#ffe4e1</color> <!-- 浅玫瑰色 -->
-    <color name="bisque">#ffe4c4</color> <!-- 桔黄色 -->
+    <color name="bisque">#FFE4C4</color> <!-- 桔黄色 -->
     <color name="moccasin">#ffe4b5</color> <!-- 鹿皮色 -->
     <color name="navajowhite">#ffdead</color> <!-- 纳瓦白 -->
     <color name="orange">#ffa500</color> <!-- 橙色 -->
@@ -173,6 +162,29 @@
     <color name="burlywood">#deb887</color> <!-- 实木色 -->
     <color name="crimson">#dc143c</color> <!-- 暗深红色 -->
     <color name="plum">#dda0dd</color> <!-- 洋李色 -->
-    <color name="gainsboro">#dcdcdc</color> <!-- 淡灰色 -->
+    <color name="gainsboro">#dcdcdc</color>
+
+    <color name="black_overlay">#66000000</color> <!-- 淡灰色 -->
+
+    <!--colors for main page-->
+    <color name="main_background">#faf8ef</color>
+    <color name="font_color_main">#776e65</color>
+    <color name="btn_background">#8f7a66</color>
+    <color name="board_background">#bbada0</color>
+
+    <!--colors for card-->
+    <color name="card_0">#d3d3d3</color>
+    <color name="card_2">#fef4f2</color>
+    <color name="card_4">#fed9a2</color>
+    <color name="card_8">#fc8c5e</color>
+    <color name="card_16">#f8692f</color>
+    <color name="card_32">#f8563d</color>
+    <color name="card_64">#ff3936</color>
+    <color name="card_128">#00c3dd</color>
+    <color name="card_256">#00a4be</color>
+    <color name="card_512">#00a4be</color>
+    <color name="card_1024">#00abcb</color>
+    <color name="card_2048">#00abcb</color>
+    <color name="card_4096">#005d6e</color>
 
 </resources>

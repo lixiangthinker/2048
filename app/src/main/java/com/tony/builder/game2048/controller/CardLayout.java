@@ -7,7 +7,6 @@ import com.tony.builder.game2048.R;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.widget.FrameLayout;
 import android.widget.TextView;
