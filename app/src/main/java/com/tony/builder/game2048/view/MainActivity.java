@@ -1,8 +1,10 @@
-package com.tony.builder.game2048;
+package com.tony.builder.game2048.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.tony.builder.game2048.R;
 
 public class MainActivity extends AppCompatActivity {
 
