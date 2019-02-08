@@ -8,8 +8,8 @@ import java.util.List;
 public class BoardModel implements IMotionHandler {
     private static final int BOARD_DIMENSION = 4;
     private static final double PROBABILITY_OF_FOUR = 0.4;
-    private int cardMap[][] = new int[BOARD_DIMENSION][BOARD_DIMENSION];
-    private List<Point> emptyPointList = new LinkedList<>();
+    private int cardMap[][];
+    private List<Point> emptyPointList;
     private BoardEventListener boardEventListener = null;
 
     public interface BoardEventListener{
@@ -20,6 +20,17 @@ public class BoardModel implements IMotionHandler {
     }
 
     public BoardModel() {
+        cardMap = new int[BOARD_DIMENSION][BOARD_DIMENSION];
+        emptyPointList = new LinkedList<>();
+        resetCardBoard();
+        genRandomCards();
+        genRandomCards();
+    }
+
+    // for inject cardmap and emptyPointList;
+    public BoardModel(int cardMap[][], List<Point> emptyPointList) {
+        this.cardMap = cardMap;
+        this.emptyPointList = emptyPointList;
         resetCardBoard();
         genRandomCards();
         genRandomCards();
