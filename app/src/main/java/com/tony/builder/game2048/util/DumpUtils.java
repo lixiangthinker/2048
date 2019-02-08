@@ -1,12 +1,12 @@
 package com.tony.builder.game2048.util;
 
 public class DumpUtils {
-    int[][] currentMap = {
-            {0,0,0,0},
-            {2,2,0,0},
-            {2,0,2,0},
-            {0,2,2,0}
-    };
+//    int[][] currentMap = {
+//            {0,0,0,0},
+//            {2,2,0,0},
+//            {2,0,2,0},
+//            {0,2,2,0}
+//    };
     public static boolean isEqual(int[][] expect, int[][] value) {
         if (expect.length != value.length) {
             return false;

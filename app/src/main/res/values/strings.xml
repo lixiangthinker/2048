@@ -7,7 +7,7 @@
     <string name="scoreprompt">Score:</string>
     <string name="game_title">2048</string>
 
-    <string name="how_to_play"><b>HOW TO PLAY:</b> Swipe to move the tiles. When two tiles with the same number touch, they merge into one!iew</string>
+    <string name="how_to_play"><b>HOW TO PLAY:</b> Swipe to move the tiles. When two tiles with the same number touch, they merge into one!</string>
     <string name="welcome">Join the numbers and get to the <b>2048 tile!</b></string>
     <string name="new_game">New Game</string>
     <string name="title_score">SCORE</string>
