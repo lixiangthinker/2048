@@ -177,7 +177,42 @@ public class BoardModel implements IMotionHandler {
 
     @Override
     public void onSwipeRight() {
+        for (int y = 0; y < BOARD_DIMENSION; y++) {
+            for (int x = BOARD_DIMENSION - 1; x >= 0; x--) {
+                // if current point is empty, find next none empty point, move to current point;
+                if (cardMap[y][x] <= 0) {
+                    Point pt = null;
+                    for (int k = x - 1; k >= 0; k--) {
+                        if (cardMap[y][k] > 0) {
+                            pt = new Point(k, y);
+                            break;
+                        }
+                    }
 
+                    if (pt != null) {
+                        cardMap[y][x] = cardMap[pt.y][pt.x];
+                        cardMap[pt.y][pt.x] = 0;
+                        notifyMergeEvent(pt, new Point(x, y));
+                    } else {
+                        // current line is empty, scan next line;
+                        x = -1;
+                        break;
+                    }
+                }
+                // now current point is not empty, check if next none-empty point should merge.
+                for (int k = x - 1; k >= 0; k--) {
+                    if (cardMap[y][k] <= 0) {
+                        continue;
+                    }
+                    if (cardMap[y][k] == cardMap[y][x]) {
+                        cardMap[y][x] = cardMap[y][x] * 2;
+                        cardMap[y][k] = 0;
+                        notifyMergeEvent(new Point(k,y), new Point(x,y));
+                    }
+                    break;
+                }
+            }
+        }
     }
 
     public void setBoardEventListener(BoardEventListener boardEventListener) {

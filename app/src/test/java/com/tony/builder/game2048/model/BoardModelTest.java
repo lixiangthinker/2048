@@ -23,15 +23,6 @@ public class BoardModelTest {
     }
 
     @Test
-    public void testDump() {
-        BoardModel bm = new BoardModel();
-        String result = bm.dump();
-        System.out.println(result);
-    }
-
-    boolean resetFlag = false;
-
-    @Test
     public void testResetCardBoard() throws NoSuchMethodException,
             IllegalAccessException, InvocationTargetException {
         int cardMap[][] = new int[4][4];
@@ -39,72 +30,31 @@ public class BoardModelTest {
         BoardModel bm = new BoardModel(cardMap, emptyPointList);
         assertEquals(14, emptyPointList.size());
 
-        final int resetDimention = 4;
-        bm.setBoardEventListener(new BoardModel.BoardEventListener() {
-            @Override
-            public void onBoardReset(int boardDimension) {
-                resetFlag = true;
-                assertEquals(resetDimention, boardDimension);
-            }
-
-            @Override
-            public void onCardGenerated(Point pt) {
-
-            }
-
-            @Override
-            public void onCardMerged(Point source, Point sink, int sourceValue, int sinkValue) {
-
-            }
-
-            @Override
-            public void onGameFinished() {
-
-            }
-        });
-
         Method resetCardBoard = bm.getClass().getDeclaredMethod("resetCardBoard", null);
         resetCardBoard.setAccessible(true);
         resetCardBoard.invoke(bm);
-        assertTrue(resetFlag);
 
         assertEquals(16, emptyPointList.size());
     }
 
     @Test
-    public void testSwipeLeft() {
+    public void testOnSwipeLeft() {
         BoardModel bm = new BoardModel();
-        bm.setBoardEventListener(new BoardModel.BoardEventListener() {
-            @Override
-            public void onBoardReset(int boardDimension) {
-            }
-
-            @Override
-            public void onCardGenerated(Point pt) {
-
-            }
-
-            @Override
-            public void onCardMerged(Point source, Point sink, int sourceValue, int sinkValue) {
-                System.out.println("source=" + source + " sink=" + sink +
-                        " sourceValue=" + sourceValue + " sinkValue=" + sinkValue);
-            }
-
-            @Override
-            public void onGameFinished() {
-
-            }
-        });
         int[][] currentMap = {
                 {0,0,0,0},
                 {0,2,0,0},
                 {0,0,2,0},
                 {0,0,0,2}
         };
-        System.out.println("original = " + DumpUtils.dump(currentMap));
+        int[][] expectMap = {
+                {0,0,0,0},
+                {2,0,0,0},
+                {2,0,0,0},
+                {2,0,0,0}
+        };
         bm.setCardMap(currentMap);
         bm.onSwipeLeft();
-        System.out.println(bm.dump());
+        assertTrue(DumpUtils.isEqual(expectMap, currentMap));
 
         int[][] currentMap2 = {
                 {4,0,0,0},
@@ -112,10 +62,15 @@ public class BoardModelTest {
                 {4,0,2,0},
                 {4,0,0,2}
         };
-        System.out.println("original = " + DumpUtils.dump(currentMap2));
+        int[][] expectMap2 = {
+                {4,0,0,0},
+                {4,2,0,0},
+                {4,2,0,0},
+                {4,2,0,0}
+        };
         bm.setCardMap(currentMap2);
         bm.onSwipeLeft();
-        System.out.println(bm.dump());
+        assertTrue(DumpUtils.isEqual(expectMap2, currentMap2));
 
         int[][] currentMap3 = {
                 {2,0,0,0},
@@ -123,10 +78,15 @@ public class BoardModelTest {
                 {2,0,2,0},
                 {2,0,0,2}
         };
-        System.out.println("original = " + DumpUtils.dump(currentMap3));
+        int[][] expectMap3 = {
+                {2,0,0,0},
+                {4,0,0,0},
+                {4,0,0,0},
+                {4,0,0,0}
+        };
         bm.setCardMap(currentMap3);
         bm.onSwipeLeft();
-        System.out.println(bm.dump());
+        assertTrue(DumpUtils.isEqual(expectMap3, currentMap3));
 
         int[][] currentMap4 = {
                 {0,2,0,0},
@@ -134,9 +94,109 @@ public class BoardModelTest {
                 {0,2,2,0},
                 {0,2,0,2}
         };
-        System.out.println("original = " + DumpUtils.dump(currentMap4));
+        int[][] expectMap4 = {
+                {2,0,0,0},
+                {2,0,0,0},
+                {4,0,0,0},
+                {4,0,0,0}
+        };
         bm.setCardMap(currentMap4);
         bm.onSwipeLeft();
-        System.out.println(bm.dump());
+        assertTrue(DumpUtils.isEqual(expectMap4, currentMap4));
+    }
+
+    @Test
+    public void testOnSwipeRight() {
+        BoardModel bm = new BoardModel();
+        int[][] currentMap = {
+                {0,0,0,0},
+                {0,2,0,0},
+                {0,0,2,0},
+                {0,0,0,2}
+        };
+        int[][] expectMap = {
+                {0,0,0,0},
+                {0,0,0,2},
+                {0,0,0,2},
+                {0,0,0,2}
+        };
+        bm.setCardMap(currentMap);
+        bm.onSwipeRight();
+        assertTrue(DumpUtils.isEqual(expectMap, currentMap));
+
+        int[][] currentMap2 = {
+                {4,0,0,0},
+                {4,2,0,0},
+                {4,0,2,0},
+                {4,0,0,2}
+        };
+        int[][] expectMap2 = {
+                {0,0,0,4},
+                {0,0,4,2},
+                {0,0,4,2},
+                {0,0,4,2}
+        };
+        bm.setCardMap(currentMap2);
+        bm.onSwipeRight();
+        assertTrue(DumpUtils.isEqual(expectMap2, currentMap2));
+
+        int[][] currentMap3 = {
+                {2,0,0,0},
+                {2,2,0,0},
+                {2,0,2,0},
+                {2,0,0,2}
+        };
+        int[][] expectMap3 = {
+                {0,0,0,2},
+                {0,0,0,4},
+                {0,0,0,4},
+                {0,0,0,4}
+        };
+        bm.setCardMap(currentMap3);
+        bm.onSwipeRight();
+        assertTrue(DumpUtils.isEqual(expectMap3, currentMap3));
+
+        int[][] currentMap4 = {
+                {0,2,0,0},
+                {0,2,0,0},
+                {0,2,2,0},
+                {0,2,0,2}
+        };
+        int[][] expectMap4 = {
+                {0,0,0,2},
+                {0,0,0,2},
+                {0,0,0,4},
+                {0,0,0,4}
+        };
+        bm.setCardMap(currentMap4);
+        bm.onSwipeRight();
+        assertTrue(DumpUtils.isEqual(expectMap4, currentMap4));
+    }
+
+    @Test
+    public void testDumpUtil() {
+        int[][] expect = {
+                {0,2,0,0},
+                {0,2,0,0},
+                {0,2,2,0},
+                {0,2,0,2}
+        };
+
+        int[][] currentMap = {
+                {0,2,0,0},
+                {0,2,0,0},
+                {0,2,2,0},
+                {0,2,0,2}
+        };
+
+        int[][] errorMap = {
+                {0,2,0,0},
+                {0,2,0,0},
+                {0,2,2,0},
+                {4,2,0,2}
+        };
+
+        assertTrue(DumpUtils.isEqual(expect, currentMap));
+        assertFalse(DumpUtils.isEqual(expect,errorMap));
     }
 }
