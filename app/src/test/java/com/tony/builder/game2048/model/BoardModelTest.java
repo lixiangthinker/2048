@@ -172,6 +172,145 @@ public class BoardModelTest {
         bm.onSwipeRight();
         assertTrue(DumpUtils.isEqual(expectMap4, currentMap4));
     }
+    @Test
+    public void testOnSwipeUp() {
+        BoardModel bm = new BoardModel();
+        int[][] currentMap = {
+                {0,0,0,0},
+                {0,2,0,0},
+                {0,0,2,0},
+                {0,0,0,2}
+        };
+        int[][] expectMap = {
+                {0,2,2,2},
+                {0,0,0,0},
+                {0,0,0,0},
+                {0,0,0,0}
+        };
+        bm.setCardMap(currentMap);
+        bm.onSwipeUp();
+        System.out.println(bm.dump());
+        assertTrue(DumpUtils.isEqual(expectMap, currentMap));
+
+        int[][] currentMap2 = {
+                {4,4,4,4},
+                {0,0,0,2},
+                {0,0,2,0},
+                {0,2,0,0}
+        };
+        int[][] expectMap2 = {
+                {4,4,4,4},
+                {0,2,2,2},
+                {0,0,0,0},
+                {0,0,0,0}
+        };
+        bm.setCardMap(currentMap2);
+        bm.onSwipeUp();
+        System.out.println(bm.dump());
+        assertTrue(DumpUtils.isEqual(expectMap2, currentMap2));
+
+        int[][] currentMap3 = {
+                {2,2,2,2},
+                {0,0,2,0},
+                {0,2,0,0},
+                {2,0,0,0}
+        };
+        int[][] expectMap3 = {
+                {4,4,4,2},
+                {0,0,0,0},
+                {0,0,0,0},
+                {0,0,0,0}
+        };
+        bm.setCardMap(currentMap3);
+        bm.onSwipeUp();
+        assertTrue(DumpUtils.isEqual(expectMap3, currentMap3));
+
+        int[][] currentMap4 = {
+                {0,0,0,0},
+                {2,2,2,2},
+                {0,2,0,0},
+                {2,0,0,0}
+        };
+        int[][] expectMap4 = {
+                {4,4,2,2},
+                {0,0,0,0},
+                {0,0,0,0},
+                {0,0,0,0}
+        };
+        bm.setCardMap(currentMap4);
+        bm.onSwipeUp();
+        assertTrue(DumpUtils.isEqual(expectMap4, currentMap4));
+    }
+
+    @Test
+    public void testOnSwipeDown() {
+        BoardModel bm = new BoardModel();
+        int[][] currentMap = {
+                {0,0,0,0},
+                {0,2,0,0},
+                {0,0,2,0},
+                {0,0,0,2}
+        };
+        int[][] expectMap = {
+                {0,0,0,0},
+                {0,0,0,0},
+                {0,0,0,0},
+                {0,2,2,2}
+        };
+        bm.setCardMap(currentMap);
+        bm.onSwipeDown();
+        System.out.println(bm.dump());
+        assertTrue(DumpUtils.isEqual(expectMap, currentMap));
+
+        int[][] currentMap2 = {
+                {4,4,4,4},
+                {0,0,0,2},
+                {0,0,2,0},
+                {0,2,0,0}
+        };
+        int[][] expectMap2 = {
+                {0,0,0,0},
+                {0,0,0,0},
+                {0,4,4,4},
+                {4,2,2,2}
+        };
+        bm.setCardMap(currentMap2);
+        bm.onSwipeDown();
+        System.out.println(bm.dump());
+        assertTrue(DumpUtils.isEqual(expectMap2, currentMap2));
+
+        int[][] currentMap3 = {
+                {2,2,2,2},
+                {0,0,2,0},
+                {0,2,0,0},
+                {2,0,0,0}
+        };
+        int[][] expectMap3 = {
+                {0,0,0,0},
+                {0,0,0,0},
+                {0,0,0,0},
+                {4,4,4,2}
+        };
+        bm.setCardMap(currentMap3);
+        bm.onSwipeDown();
+        assertTrue(DumpUtils.isEqual(expectMap3, currentMap3));
+
+        int[][] currentMap4 = {
+                {0,0,0,0},
+                {2,2,2,2},
+                {0,2,0,0},
+                {2,0,0,0}
+        };
+        int[][] expectMap4 = {
+                {0,0,0,0},
+                {0,0,0,0},
+                {0,0,0,0},
+                {4,4,2,2}
+        };
+        bm.setCardMap(currentMap4);
+        bm.onSwipeDown();
+        assertTrue(DumpUtils.isEqual(expectMap4, currentMap4));
+    }
 
     @Test
     public void testDumpUtil() {

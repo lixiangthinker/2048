@@ -119,13 +119,83 @@ public class BoardModel implements IMotionHandler {
     }
 
     @Override
-    public void onSwipeUp() {
+    public void onSwipeDown() {
+        for (int x = 0; x < BOARD_DIMENSION; x++) {
+            for (int y = BOARD_DIMENSION - 1; y >= 0; y--) {
+                // if current point is empty, find next none empty point, move to current point;
+                if (cardMap[y][x] <= 0) {
+                    Point pt = null;
+                    for (int k = y - 1; k >= 0; k--) {
+                        if (cardMap[k][x] > 0) {
+                            pt = new Point(x, k);
+                            break;
+                        }
+                    }
 
+                    if (pt != null) {
+                        cardMap[y][x] = cardMap[pt.y][pt.x];
+                        cardMap[pt.y][pt.x] = 0;
+                        notifyMergeEvent(pt, new Point(x, y));
+                    } else {
+                        // current line is empty, scan next line;
+                        y = -1;
+                        break;
+                    }
+                }
+                // now current point is not empty, check if next none-empty point should merge.
+                for (int k = y - 1; k >= 0; k--) {
+                    if (cardMap[k][x] <= 0) {
+                        continue;
+                    }
+                    if (cardMap[k][x] == cardMap[y][x]) {
+                        cardMap[y][x] = cardMap[y][x] * 2;
+                        cardMap[k][x] = 0;
+                        notifyMergeEvent(new Point(x,k), new Point(x,y));
+                    }
+                    break;
+                }
+            }
+        }
     }
 
     @Override
-    public void onSwipeDown() {
+    public void onSwipeUp() {
+        for (int x = 0; x < BOARD_DIMENSION; x++) {
+            for (int y = 0; y < BOARD_DIMENSION; y++) {
+                // if current point is empty, find next none empty point, move to current point;
+                if (cardMap[y][x] <= 0) {
+                    Point pt = null;
+                    for (int k = y + 1; k < BOARD_DIMENSION; k++) {
+                        if (cardMap[k][x] > 0) {
+                            pt = new Point(x, k);
+                            break;
+                        }
+                    }
 
+                    if (pt != null) {
+                        cardMap[y][x] = cardMap[pt.y][pt.x];
+                        cardMap[pt.y][pt.x] = 0;
+                        notifyMergeEvent(pt, new Point(x, y));
+                    } else {
+                        // current line is empty, scan next line;
+                        y = BOARD_DIMENSION;
+                        break;
+                    }
+                }
+                // now current point is not empty, check if next none-empty point should merge.
+                for (int k = y + 1; k < BOARD_DIMENSION; k++) {
+                    if (cardMap[k][x] <= 0) {
+                        continue;
+                    }
+                    if (cardMap[k][x] == cardMap[y][x]) {
+                        cardMap[y][x] = cardMap[y][x] * 2;
+                        cardMap[k][x] = 0;
+                        notifyMergeEvent(new Point(x,k), new Point(x,y));
+                    }
+                    break;
+                }
+            }
+        }
     }
 
     private void notifyMergeEvent(Point source, Point sink) {
