@@ -1,5 +1,6 @@
 package com.tony.builder.game2048.model;
 
+import com.tony.builder.game2048.util.DumpUtils;
 import com.tony.builder.game2048.view.IMotionHandler;
 
 import java.util.LinkedList;
@@ -12,10 +13,13 @@ public class BoardModel implements IMotionHandler {
     private List<Point> emptyPointList;
     private BoardEventListener boardEventListener = null;
 
-    public interface BoardEventListener{
+    public interface BoardEventListener {
         void onBoardReset(int boardDimension);
+
         void onCardGenerated(Point pt);
-        void onCardMerged(Point source, Point sink);
+
+        void onCardMerged(Point source, Point sink, int sourceValue, int sinkValue);
+
         void onGameFinished();
     }
 
@@ -73,12 +77,13 @@ public class BoardModel implements IMotionHandler {
 
     /**
      * check if this game is finished.
+     *
      * @return if game is finished.
      */
     private boolean isGameFinished() {
         for (int y = 0; y < BOARD_DIMENSION; y++) {
             for (int x = 0; x < BOARD_DIMENSION - 1; x++) {
-                if (cardMap[x][y]==cardMap[x + 1][y]) {
+                if (cardMap[x][y] == cardMap[x + 1][y]) {
                     // cards can be merged;
                     return false;
                 }
@@ -92,7 +97,7 @@ public class BoardModel implements IMotionHandler {
 
         for (int x = 0; x < BOARD_DIMENSION; x++) {
             for (int y = 0; y < BOARD_DIMENSION - 1; y++) {
-                if (cardMap[x][y]==cardMap[x][y + 1]) {
+                if (cardMap[x][y] == cardMap[x][y + 1]) {
                     // cards can be merged;
                     return false;
                 }
@@ -109,21 +114,8 @@ public class BoardModel implements IMotionHandler {
         return true;
     }
 
-    public void setBoardEventListener(BoardEventListener boardEventListener) {
-        this.boardEventListener = boardEventListener;
-    }
-
     public String dump() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("cardMap = ");
-        for (int y = 0; y < BOARD_DIMENSION; y++) {
-            sb.append("{ ");
-            for (int x = 0; x < BOARD_DIMENSION; x++) {
-                sb.append("{"+cardMap[x][y]+" }");
-            }
-            sb.append(" }\n");
-        }
-        return sb.toString();
+        return DumpUtils.dump(cardMap);
     }
 
     @Override
@@ -136,13 +128,67 @@ public class BoardModel implements IMotionHandler {
 
     }
 
+    private void notifyMergeEvent(Point source, Point sink) {
+        if (boardEventListener != null) {
+            boardEventListener.onCardMerged(source, sink,
+                    cardMap[source.y][source.x], cardMap[sink.y][sink.x]);
+        }
+    }
+
     @Override
     public void onSwipeLeft() {
+        for (int y = 0; y < BOARD_DIMENSION; y++) {
+            for (int x = 0; x < BOARD_DIMENSION; x++) {
+                // if current point is empty, find next none empty point, move to current point;
+                if (cardMap[y][x] <= 0) {
+                    Point pt = null;
+                    for (int k = x + 1; k < BOARD_DIMENSION; k++) {
+                        if (cardMap[y][k] > 0) {
+                            pt = new Point(k, y);
+                            break;
+                        }
+                    }
 
+                    if (pt != null) {
+                        cardMap[y][x] = cardMap[pt.y][pt.x];
+                        cardMap[pt.y][pt.x] = 0;
+                        notifyMergeEvent(pt, new Point(x, y));
+                    } else {
+                        // current line is empty, scan next line;
+                        x = BOARD_DIMENSION;
+                        break;
+                    }
+                }
+                // now current point is not empty, check if next none-empty point should merge.
+                for (int k = x + 1; k < BOARD_DIMENSION; k++) {
+                    if (cardMap[y][k] <= 0) {
+                        continue;
+                    }
+                    if (cardMap[y][k] == cardMap[y][x]) {
+                        cardMap[y][x] = cardMap[y][x] * 2;
+                        cardMap[y][k] = 0;
+                        notifyMergeEvent(new Point(k,y), new Point(x,y));
+                    }
+                    break;
+                }
+            }
+        }
     }
 
     @Override
     public void onSwipeRight() {
 
+    }
+
+    public void setBoardEventListener(BoardEventListener boardEventListener) {
+        this.boardEventListener = boardEventListener;
+    }
+
+    public void setCardMap(int[][] cardMap) {
+        this.cardMap = cardMap;
+    }
+
+    public void setEmptyPointList(List<Point> emptyPointList) {
+        this.emptyPointList = emptyPointList;
     }
 }
