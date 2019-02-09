@@ -20,6 +20,8 @@ public class BoardModel implements IMotionHandler {
 
         void onCardMerged(Point source, Point sink, int sourceValue, int sinkValue);
 
+        void onCardMoved(Point source, Point sink, int sourceValue, int sinkValue);
+
         void onGameFinished();
     }
 
@@ -180,7 +182,7 @@ public class BoardModel implements IMotionHandler {
                         cardMap[y][x] = cardMap[pt.y][pt.x];
                         cardMap[pt.y][pt.x] = 0;
                         changeResult = true;
-                        notifyMergeEvent(pt, new Point(x, y));
+                        notifyMoveEvent(pt, new Point(x, y));
                     } else {
                         // current line is empty, scan next line;
                         y = -1;
@@ -224,7 +226,7 @@ public class BoardModel implements IMotionHandler {
                         cardMap[y][x] = cardMap[pt.y][pt.x];
                         cardMap[pt.y][pt.x] = 0;
                         changeResult = true;
-                        notifyMergeEvent(pt, new Point(x, y));
+                        notifyMoveEvent(pt, new Point(x, y));
                     } else {
                         // current line is empty, scan next line;
                         y = BOARD_DIMENSION;
@@ -256,6 +258,13 @@ public class BoardModel implements IMotionHandler {
         }
     }
 
+    private void notifyMoveEvent(Point source, Point sink) {
+        if (boardEventListener != null) {
+            boardEventListener.onCardMoved(source, sink,
+                    cardMap[source.y][source.x], cardMap[sink.y][sink.x]);
+        }
+    }
+
     @Override
     public boolean onSwipeLeft() {
         boolean changeResult = false;
@@ -275,7 +284,7 @@ public class BoardModel implements IMotionHandler {
                         cardMap[y][x] = cardMap[pt.y][pt.x];
                         cardMap[pt.y][pt.x] = 0;
                         changeResult = true;
-                        notifyMergeEvent(pt, new Point(x, y));
+                        notifyMoveEvent(pt, new Point(x, y));
                     } else {
                         // current line is empty, scan next line;
                         x = BOARD_DIMENSION;
@@ -319,7 +328,7 @@ public class BoardModel implements IMotionHandler {
                         cardMap[y][x] = cardMap[pt.y][pt.x];
                         cardMap[pt.y][pt.x] = 0;
                         changeResult = true;
-                        notifyMergeEvent(pt, new Point(x, y));
+                        notifyMoveEvent(pt, new Point(x, y));
                     } else {
                         // current line is empty, scan next line;
                         x = -1;

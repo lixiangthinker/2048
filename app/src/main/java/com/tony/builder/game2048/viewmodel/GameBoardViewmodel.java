@@ -56,7 +56,25 @@ public class GameBoardViewmodel extends ViewModel {
                     mCards[source.y][source.x].postValue(sourceValue);
                     mCards[sink.y][sink.x].postValue(sinkValue);
                 }
+
+                if (mScore != null) {
+                    // merge will add to score, but move will not.
+                    Log.d(TAG, "mScore.getValue() = " + mScore.getValue() + " sinkvalue = " + sinkValue);
+                    // need to ensure currently is on main thread.
+                    mScore.setValue(mScore.getValue() + sinkValue);
+                }
             }
+
+            @Override
+            public void onCardMoved(Point source, Point sink, int sourceValue, int sinkValue) {
+                Log.d(TAG, "onCardMoved ["+source.x+","+source.y+"] = "+sourceValue+
+                        " -> ["+sink.x+","+sink.y+"] = "+sinkValue);
+                if (mCards != null) {
+                    mCards[source.y][source.x].postValue(sourceValue);
+                    mCards[sink.y][sink.x].postValue(sinkValue);
+                }
+            }
+
 
             @Override
             public void onGameFinished() {
@@ -93,7 +111,7 @@ public class GameBoardViewmodel extends ViewModel {
             mBest = new MutableLiveData<>();
             loadBest();
         }
-        return mScore;
+        return mBest;
     }
 
     private void loadBest() {
