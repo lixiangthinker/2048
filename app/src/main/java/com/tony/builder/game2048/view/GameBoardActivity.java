@@ -3,6 +3,7 @@ package com.tony.builder.game2048.view;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.GestureDetectorCompat;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -17,18 +18,20 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.tony.builder.game2048.R;
+import com.tony.builder.game2048.model.BoardModel;
 import com.tony.builder.game2048.viewmodel.GameBoardViewmodel;
 
 public class GameBoardActivity extends AppCompatActivity {
     private static final String TAG = "GameBoardActivity";
     private static final int BOARD_DIMENSION = 4;
-    TextView[][] cards = new TextView[BOARD_DIMENSION][BOARD_DIMENSION];
+    TextView[][] tvCards = new TextView[BOARD_DIMENSION][BOARD_DIMENSION];
     TextView tvScore;
     TextView tvBest;
     Button btnNewGame;
 
     private GestureDetectorCompat mDetector;
     ConstraintLayout boardContainer;
+    GameBoardViewmodel viewmodel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,17 +47,25 @@ public class GameBoardActivity extends AppCompatActivity {
         btnNewGame = findViewById(R.id.btnNewgame);
         boardContainer = findViewById(R.id.boardContainer);
 
-        GameBoardViewmodel viewmodel = ViewModelProviders.of(this).get(GameBoardViewmodel.class);
+        viewmodel = ViewModelProviders.of(this).get(GameBoardViewmodel.class);
+        viewmodel.setBoardModel(new BoardModel());
         subscribe(viewmodel);
         registerMotionMonitor();
+        viewmodel.onStartGame();
+
+        btnNewGame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewmodel.onStartGame();
+            }
+        });
     }
 
     private void initCardsView() {
         int[][] cardIds = getCardId();
         for (int i = 0; i < BOARD_DIMENSION; i++) {
             for (int j = 0; j < BOARD_DIMENSION; j++) {
-                cards[i][j] = findViewById(cardIds[i][j]);
-                //Log.d(TAG, "cards["+i+"]["+j+"] = " + cards[i][j].getText());
+                tvCards[i][j] = findViewById(cardIds[i][j]);
             }
         }
     }
@@ -70,7 +81,6 @@ public class GameBoardActivity extends AppCompatActivity {
             for (int j = 0; j < BOARD_DIMENSION; j++) {
                 String strCardID = "card" + i + j;
                 result[i][j] = getId(strCardID);
-                //Log.d(TAG, "result["+i+"]["+j+"] = " + result[i][j]);
             }
         }
         return result;
@@ -96,12 +106,63 @@ public class GameBoardActivity extends AppCompatActivity {
                 tvBest.setText(String.valueOf(best));
             }
         });
-        model.getBoard().observe(this, new Observer<Integer[][]>() {
-            @Override
-            public void onChanged(Integer[][] integers) {
-                // TODO: change board text.
+        LiveData<Integer>[][] cards = model.getCards();
+        for (int i = 0; i < cards.length; i++) {
+            for (int j = 0; j < cards[i].length; j++) {
+                LiveData<Integer> card = cards[i][j];
+                card.observe(this, new CardObserver(i,j));
             }
-        });
+        }
+    }
+
+    private class CardObserver implements Observer<Integer> {
+        private int x;
+        private int y;
+        CardObserver(int positionX, int positionY) {
+            x = positionX;
+            y = positionY;
+        }
+
+        @Override
+        public void onChanged(Integer value) {
+            TextView card = tvCards[x][y];
+            card.setBackgroundColor(getResources().getColor(getColorId(value), null));
+            if (value == 0) {
+                card.setText("");
+            } else {
+                card.setText(String.valueOf(value));
+            }
+        }
+
+        private int getColorId(Integer value) {
+            int result = R.color.card_0;
+            if (value <=0) {
+                result = R.color.card_0;
+            } else if (value == 2) {
+                result = R.color.card_2;
+            } else if (value == 4) {
+                result = R.color.card_4;
+            } else if (value == 8) {
+                result = R.color.card_8;
+            } else if (value == 16) {
+                result = R.color.card_16;
+            } else if (value == 32) {
+                result = R.color.card_32;
+            } else if (value == 64) {
+                result = R.color.card_64;
+            } else if (value == 128) {
+                result = R.color.card_128;
+            } else if (value == 256) {
+                result = R.color.card_256;
+            } else if (value == 512) {
+                result = R.color.card_512;
+            } else if (value == 1024) {
+                result = R.color.card_1024;
+            } else if (value >= 2048) {
+                result = R.color.card_2048;
+            }
+            return result;
+        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -110,15 +171,13 @@ public class GameBoardActivity extends AppCompatActivity {
                 new GestureDetector.SimpleOnGestureListener() {
                     @Override
                     public boolean onDown(MotionEvent event) {
-                        Log.d(TAG,"onDown: " + event.toString());
                         return true;
                     }
 
                     @Override
                     public boolean onFling(MotionEvent event1, MotionEvent event2,
                                            float velocityX, float velocityY) {
-                        Log.d(TAG, "onFling: " + event1.toString() + event2.toString() + " Vx = " + velocityX + " Vy = " + velocityY);
-                        handleFling(velocityX, velocityY);
+                        viewmodel.onFling(velocityX, velocityY);
                         return true;
                     }
                 });
@@ -128,9 +187,5 @@ public class GameBoardActivity extends AppCompatActivity {
                 return mDetector.onTouchEvent(event);
             }
         });
-    }
-
-    private void handleFling(float velocityX, float velocityY) {
-
     }
 }

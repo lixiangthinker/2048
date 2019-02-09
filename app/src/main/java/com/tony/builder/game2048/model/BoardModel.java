@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class BoardModel implements IMotionHandler {
-    private static final int BOARD_DIMENSION = 4;
+    public static final int BOARD_DIMENSION = 4;
     private static final double PROBABILITY_OF_FOUR = 0.4;
     private int cardMap[][];
     private List<Point> emptyPointList;
@@ -16,7 +16,7 @@ public class BoardModel implements IMotionHandler {
     public interface BoardEventListener {
         void onBoardReset(int boardDimension);
 
-        void onCardGenerated(Point pt);
+        void onCardGenerated(Point pt, int value);
 
         void onCardMerged(Point source, Point sink, int sourceValue, int sinkValue);
 
@@ -24,6 +24,10 @@ public class BoardModel implements IMotionHandler {
     }
 
     public BoardModel() {
+        startGame();
+    }
+
+    public void startGame() {
         cardMap = new int[BOARD_DIMENSION][BOARD_DIMENSION];
         emptyPointList = new LinkedList<>();
         resetCardBoard();
@@ -64,7 +68,7 @@ public class BoardModel implements IMotionHandler {
         Point pt = emptyPointList.remove((int) (Math.random() * emptyPointList.size()));
         cardMap[pt.x][pt.y] = Math.random() > PROBABILITY_OF_FOUR ? 2 : 4;
         if (boardEventListener != null) {
-            boardEventListener.onCardGenerated(pt);
+            boardEventListener.onCardGenerated(pt, cardMap[pt.x][pt.y]);
         }
 
         // check after 1 card is generated.
