@@ -17,12 +17,20 @@ public class GameBoardViewmodel extends ViewModel {
     private MutableLiveData<Integer>[][] mCards;
     private BoardModel boardModel;
 
+    private MutableLiveData<Boolean> isGameFinished;
+
     public void setBoardModel(BoardModel boardModel) {
         this.boardModel = boardModel;
         boardModel.setBoardEventListener(new BoardModel.BoardEventListener() {
             @Override
             public void onBoardReset(int boardDimension) {
                 Log.d(TAG, "onBoardReset");
+                if (mScore != null) {
+                    mScore.postValue(0);
+                }
+                if (isGameFinished != null) {
+                    isGameFinished.postValue(false);
+                }
                 if (mCards != null) {
                     for (int i = 0; i < mCards.length; i++) {
                         for (int j = 0; j < mCards[i].length; j++) {
@@ -53,8 +61,19 @@ public class GameBoardViewmodel extends ViewModel {
             @Override
             public void onGameFinished() {
                 Log.d(TAG, "onGameFinished");
+                if (isGameFinished != null) {
+                    isGameFinished.postValue(true);
+                }
+                // TODO: save best score;
             }
         });
+    }
+
+    public LiveData<Boolean> getGameFinishedFlag() {
+        if (isGameFinished == null) {
+            isGameFinished = new MutableLiveData<>();
+        }
+        return isGameFinished;
     }
 
     public LiveData<Integer> getScore() {
@@ -105,19 +124,19 @@ public class GameBoardViewmodel extends ViewModel {
         }
         if (Math.abs(velocityY) > Math.abs(velocityX)) {
             if (velocityY > 0) {
-                Log.d(TAG, "boardModel.onSwipeDown();");
-                boardModel.onSwipeDown();
+                Log.d(TAG, "boardModel.handleMotion(BoardModel.GameMotion.SWIPE_DOWN);");
+                boardModel.handleMotion(BoardModel.GameMotion.SWIPE_DOWN);
             } else {
-                Log.d(TAG, "boardModel.onSwipeUp();");
-                boardModel.onSwipeUp();
+                Log.d(TAG, "boardModel.handleMotion(BoardModel.GameMotion.SWIPE_UP);");
+                boardModel.handleMotion(BoardModel.GameMotion.SWIPE_UP);
             }
         } else {
             if (velocityX > 0) {
-                Log.d(TAG, "boardModel.onSwipeRight();");
-                boardModel.onSwipeRight();
+                Log.d(TAG, "boardModel.handleMotion(BoardModel.GameMotion.SWIPE_RIGHT);");
+                boardModel.handleMotion(BoardModel.GameMotion.SWIPE_RIGHT);
             } else {
-                Log.d(TAG, "boardModel.onSwipeLeft();");
-                boardModel.onSwipeLeft();
+                Log.d(TAG, "boardModel.handleMotion(BoardModel.GameMotion.SWIPE_LEFT);");
+                boardModel.handleMotion(BoardModel.GameMotion.SWIPE_LEFT);
             }
         }
     }

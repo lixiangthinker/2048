@@ -1,5 +1,6 @@
 package com.tony.builder.game2048.view;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.GestureDetectorCompat;
@@ -8,6 +9,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +18,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tony.builder.game2048.R;
 import com.tony.builder.game2048.model.BoardModel;
@@ -106,6 +109,14 @@ public class GameBoardActivity extends AppCompatActivity {
                 tvBest.setText(String.valueOf(best));
             }
         });
+        model.getGameFinishedFlag().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean flag) {
+                if (flag) {
+                    showSimpleDialog();
+                }
+            }
+        });
         LiveData<Integer>[][] cards = model.getCards();
         for (int i = 0; i < cards.length; i++) {
             for (int j = 0; j < cards[i].length; j++) {
@@ -187,5 +198,30 @@ public class GameBoardActivity extends AppCompatActivity {
                 return mDetector.onTouchEvent(event);
             }
         });
+    }
+
+    private void showSimpleDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setIcon(R.drawable.ic_launcher);
+        builder.setTitle("Sorry");
+        builder.setMessage("Game finished!");
+
+        //监听下方button点击事件
+        builder.setPositiveButton("Restart", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                viewmodel.onStartGame();
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Toast.makeText(GameBoardActivity.this, "Press New Game button to continue.", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        builder.setCancelable(false);
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }

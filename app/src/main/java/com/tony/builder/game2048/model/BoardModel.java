@@ -58,6 +58,15 @@ public class BoardModel implements IMotionHandler {
     }
 
     private boolean genRandomCards() {
+        emptyPointList.clear();
+
+        for (int y = 0; y < BOARD_DIMENSION; y++) {
+            for (int x = 0; x < BOARD_DIMENSION; x++) {
+                if (cardMap[y][x] <= 0) {
+                    emptyPointList.add(new Point(x, y));
+                }
+            }
+        }
         // no space left, check if game finished.
         if (emptyPointList.size() == 0) {
             isGameFinished();
@@ -66,9 +75,9 @@ public class BoardModel implements IMotionHandler {
 
         // gen 1 card at empty point.
         Point pt = emptyPointList.remove((int) (Math.random() * emptyPointList.size()));
-        cardMap[pt.x][pt.y] = Math.random() > PROBABILITY_OF_FOUR ? 2 : 4;
+        cardMap[pt.y][pt.x] = Math.random() > PROBABILITY_OF_FOUR ? 2 : 4;
         if (boardEventListener != null) {
-            boardEventListener.onCardGenerated(pt, cardMap[pt.x][pt.y]);
+            boardEventListener.onCardGenerated(pt, cardMap[pt.y][pt.x]);
         }
 
         // check after 1 card is generated.
@@ -90,7 +99,7 @@ public class BoardModel implements IMotionHandler {
                 if (cardMap[x][y] == cardMap[x + 1][y]) {
                     // cards can be merged;
                     return false;
-                }
+            }
 
                 if (cardMap[x][y] <= 0) {
                     // empty position
@@ -122,8 +131,39 @@ public class BoardModel implements IMotionHandler {
         return DumpUtils.dump(cardMap);
     }
 
+    public enum GameMotion{
+        SWIPE_LEFT,
+        SWIPE_RIGHT,
+        SWIPE_UP,
+        SWIPE_DOWN
+    }
+
+    public void handleMotion(GameMotion motion) {
+        boolean changeResult = false;
+        switch (motion) {
+            case SWIPE_UP:
+                changeResult = onSwipeUp();
+                break;
+            case SWIPE_DOWN:
+                changeResult = onSwipeDown();
+                break;
+            case SWIPE_LEFT:
+                changeResult = onSwipeLeft();
+                break;
+            case SWIPE_RIGHT:
+                changeResult = onSwipeRight();
+                break;
+            default:
+                break;
+        }
+        if (changeResult) {
+            genRandomCards();
+        }
+    }
+
     @Override
-    public void onSwipeDown() {
+    public boolean onSwipeDown() {
+        boolean changeResult = false;
         for (int x = 0; x < BOARD_DIMENSION; x++) {
             for (int y = BOARD_DIMENSION - 1; y >= 0; y--) {
                 // if current point is empty, find next none empty point, move to current point;
@@ -139,6 +179,7 @@ public class BoardModel implements IMotionHandler {
                     if (pt != null) {
                         cardMap[y][x] = cardMap[pt.y][pt.x];
                         cardMap[pt.y][pt.x] = 0;
+                        changeResult = true;
                         notifyMergeEvent(pt, new Point(x, y));
                     } else {
                         // current line is empty, scan next line;
@@ -154,16 +195,19 @@ public class BoardModel implements IMotionHandler {
                     if (cardMap[k][x] == cardMap[y][x]) {
                         cardMap[y][x] = cardMap[y][x] * 2;
                         cardMap[k][x] = 0;
+                        changeResult = true;
                         notifyMergeEvent(new Point(x,k), new Point(x,y));
                     }
                     break;
                 }
             }
         }
+        return changeResult;
     }
 
     @Override
-    public void onSwipeUp() {
+    public boolean onSwipeUp() {
+        boolean changeResult = false;
         for (int x = 0; x < BOARD_DIMENSION; x++) {
             for (int y = 0; y < BOARD_DIMENSION; y++) {
                 // if current point is empty, find next none empty point, move to current point;
@@ -179,6 +223,7 @@ public class BoardModel implements IMotionHandler {
                     if (pt != null) {
                         cardMap[y][x] = cardMap[pt.y][pt.x];
                         cardMap[pt.y][pt.x] = 0;
+                        changeResult = true;
                         notifyMergeEvent(pt, new Point(x, y));
                     } else {
                         // current line is empty, scan next line;
@@ -194,12 +239,14 @@ public class BoardModel implements IMotionHandler {
                     if (cardMap[k][x] == cardMap[y][x]) {
                         cardMap[y][x] = cardMap[y][x] * 2;
                         cardMap[k][x] = 0;
+                        changeResult = true;
                         notifyMergeEvent(new Point(x,k), new Point(x,y));
                     }
                     break;
                 }
             }
         }
+        return changeResult;
     }
 
     private void notifyMergeEvent(Point source, Point sink) {
@@ -210,7 +257,8 @@ public class BoardModel implements IMotionHandler {
     }
 
     @Override
-    public void onSwipeLeft() {
+    public boolean onSwipeLeft() {
+        boolean changeResult = false;
         for (int y = 0; y < BOARD_DIMENSION; y++) {
             for (int x = 0; x < BOARD_DIMENSION; x++) {
                 // if current point is empty, find next none empty point, move to current point;
@@ -226,6 +274,7 @@ public class BoardModel implements IMotionHandler {
                     if (pt != null) {
                         cardMap[y][x] = cardMap[pt.y][pt.x];
                         cardMap[pt.y][pt.x] = 0;
+                        changeResult = true;
                         notifyMergeEvent(pt, new Point(x, y));
                     } else {
                         // current line is empty, scan next line;
@@ -241,16 +290,19 @@ public class BoardModel implements IMotionHandler {
                     if (cardMap[y][k] == cardMap[y][x]) {
                         cardMap[y][x] = cardMap[y][x] * 2;
                         cardMap[y][k] = 0;
+                        changeResult = true;
                         notifyMergeEvent(new Point(k,y), new Point(x,y));
                     }
                     break;
                 }
             }
         }
+        return changeResult;
     }
 
     @Override
-    public void onSwipeRight() {
+    public boolean onSwipeRight() {
+        boolean changeResult = false;
         for (int y = 0; y < BOARD_DIMENSION; y++) {
             for (int x = BOARD_DIMENSION - 1; x >= 0; x--) {
                 // if current point is empty, find next none empty point, move to current point;
@@ -266,6 +318,7 @@ public class BoardModel implements IMotionHandler {
                     if (pt != null) {
                         cardMap[y][x] = cardMap[pt.y][pt.x];
                         cardMap[pt.y][pt.x] = 0;
+                        changeResult = true;
                         notifyMergeEvent(pt, new Point(x, y));
                     } else {
                         // current line is empty, scan next line;
@@ -281,12 +334,14 @@ public class BoardModel implements IMotionHandler {
                     if (cardMap[y][k] == cardMap[y][x]) {
                         cardMap[y][x] = cardMap[y][x] * 2;
                         cardMap[y][k] = 0;
+                        changeResult = true;
                         notifyMergeEvent(new Point(k,y), new Point(x,y));
                     }
                     break;
                 }
             }
         }
+        return changeResult;
     }
 
     public void setBoardEventListener(BoardEventListener boardEventListener) {
