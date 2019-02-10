@@ -11,11 +11,17 @@ import androidx.lifecycle.ViewModelProviders;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.ShapeDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -69,6 +75,7 @@ public class GameBoardActivity extends AppCompatActivity {
         for (int i = 0; i < BOARD_DIMENSION; i++) {
             for (int j = 0; j < BOARD_DIMENSION; j++) {
                 tvCards[i][j] = findViewById(cardIds[i][j]);
+                tvCards[i][j].setText("");
             }
         }
     }
@@ -137,11 +144,17 @@ public class GameBoardActivity extends AppCompatActivity {
         @Override
         public void onChanged(Integer value) {
             TextView card = tvCards[x][y];
-            card.setBackgroundColor(getResources().getColor(getColorId(value), null));
+            GradientDrawable bg = (GradientDrawable) card.getBackground();
+            bg.setColor(getResources().getColor(getColorId(value), null));
+            card.setBackground(bg);
+            String currentCard = String.valueOf(card.getText());
             if (value == 0) {
                 card.setText("");
             } else {
                 card.setText(String.valueOf(value));
+                if (!"".equals(currentCard)) {
+                    card.startAnimation(getCardGenerateAnim());
+                }
             }
         }
 
@@ -223,5 +236,16 @@ public class GameBoardActivity extends AppCompatActivity {
         builder.setCancelable(false);
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    private ScaleAnimation getCardGenerateAnim() {
+        ScaleAnimation scaleAnim = new ScaleAnimation(0, 1, 0, 1,        //从无缩放大到正常大小
+                Animation.RELATIVE_TO_SELF,0.5F,                                       //以view自身中点为轴中心
+                Animation.RELATIVE_TO_SELF,0.5F);
+        //scaleAnim.setInterpolator(new BounceInterpolator());
+        scaleAnim.setInterpolator(new AccelerateDecelerateInterpolator());
+        scaleAnim.setDuration(200);                                                         //持续1s
+        scaleAnim.setFillAfter(true);                                       //保持缩放之后的效果
+        return scaleAnim;
     }
 }
