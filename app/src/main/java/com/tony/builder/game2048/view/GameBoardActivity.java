@@ -29,6 +29,8 @@ import com.tony.builder.game2048.R;
 import com.tony.builder.game2048.model.BoardModel;
 import com.tony.builder.game2048.model.Point;
 import com.tony.builder.game2048.viewmodel.GameBoardViewmodel;
+import com.tony.builder.game2048.viewmodel.event.MergeEvent;
+import com.tony.builder.game2048.viewmodel.event.MoveEvent;
 
 public class GameBoardActivity extends AppCompatActivity {
     private static final String TAG = "GameBoardActivity";
@@ -132,9 +134,9 @@ public class GameBoardActivity extends AppCompatActivity {
             }
         }
 
-        model.getMergeEvent().observe(this, new Observer<GameBoardViewmodel.MergeEvent>() {
+        model.getMergeEvent().observe(this, new Observer<MergeEvent>() {
             @Override
-            public void onChanged(GameBoardViewmodel.MergeEvent mergeEvent) {
+            public void onChanged(MergeEvent mergeEvent) {
                 Log.d(TAG, "onMergeEvent " + mergeEvent);
                 generateCards(mergeEvent.source.x, mergeEvent.source.y, mergeEvent.sourceValue);
                 //source move to sink
@@ -143,9 +145,9 @@ public class GameBoardActivity extends AppCompatActivity {
             }
         });
 
-        model.getMoveEvent().observe(this, new Observer<GameBoardViewmodel.MoveEvent>() {
+        model.getMoveEvent().observe(this, new Observer<MoveEvent>() {
             @Override
-            public void onChanged(GameBoardViewmodel.MoveEvent moveEvent) {
+            public void onChanged(MoveEvent moveEvent) {
                 Log.d(TAG, "onMergeEvent " + moveEvent);
                 generateCards(moveEvent.source.x, moveEvent.source.y, moveEvent.sourceValue);
                 //source move to sink

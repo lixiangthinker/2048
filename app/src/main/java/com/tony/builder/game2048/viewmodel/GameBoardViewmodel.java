@@ -4,8 +4,9 @@ import android.util.Log;
 
 import com.tony.builder.game2048.model.BoardModel;
 import com.tony.builder.game2048.model.Point;
+import com.tony.builder.game2048.viewmodel.event.MergeEvent;
+import com.tony.builder.game2048.viewmodel.event.MoveEvent;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -73,10 +74,6 @@ public class GameBoardViewmodel extends ViewModel {
             public void onCardMoved(Point source, Point sink, int sourceValue, int sinkValue) {
                 Log.d(TAG, "onCardMoved ["+source.x+","+source.y+"] = "+sourceValue+
                         " -> ["+sink.x+","+sink.y+"] = "+sinkValue);
-//                if (mCards != null) {
-//                    mCards[source.y][source.x].postValue(sourceValue);
-//                    mCards[sink.y][sink.x].postValue(sinkValue);
-//                }
 
                 if (mMoveEvent != null) {
                     mMoveEvent.setValue(new MoveEvent(source, sink, sourceValue, sinkValue));
@@ -187,31 +184,5 @@ public class GameBoardViewmodel extends ViewModel {
             return;
         }
         boardModel.startGame();
-    }
-
-    public class MergeEvent {
-        public Point source;
-        public Point sink;
-        public int sourceValue;
-        public int sinkValue;
-        public MergeEvent(Point source, Point sink, int sourceValue, int sinkValue) {
-            this.source = source;
-            this.sink = sink;
-            this.sourceValue = sourceValue;
-            this.sinkValue = sinkValue;
-        }
-
-        @NonNull
-        @Override
-        public String toString() {
-            String result = "["+source.x+","+source.y+"] -> ["+sink.x+","+sink.y+"], "+sourceValue+"->"+sinkValue;
-            return result;
-        }
-    }
-
-    public class MoveEvent extends MergeEvent{
-        public MoveEvent(Point source, Point sink, int sourceValue, int sinkValue) {
-            super(source, sink, sourceValue, sinkValue);
-        }
     }
 }
