@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
+        android:paddingEnd="20dp"
         android:text="@string/app_name"
         android:textColor="@color/font_color_main"
         android:textSize="48sp"
@@ -60,30 +61,37 @@
 
     <TextView
         android:id="@+id/tvScoreBg"
-        android:layout_width="72dp"
-        android:layout_height="61dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:background="@drawable/board_background"
-        android:gravity="center_horizontal"
-        android:paddingTop="8dp"
-        android:text="@string/title_score"
+        android:gravity="center"
+        android:padding="16dp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/tvTitle"
         app:layout_constraintEnd_toStartOf="@+id/tvBestBg"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/tvTitle"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/tvBestBg"
-        android:layout_width="72dp"
-        android:layout_height="61dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:background="@drawable/board_background"
         android:gravity="center_horizontal"
-        android:paddingTop="8dp"
-        android:text="@string/title_best"
+        android:padding="16dp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/tvTitle"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/tvScoreBg"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -100,6 +108,20 @@
         app:layout_constraintVertical_bias="0.7" />
 
     <TextView
+        android:id="@+id/tvScoreTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/title_score"
+        android:textColor="@color/font_color_main"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/tvScoreBg"
+        app:layout_constraintEnd_toEndOf="@+id/tvScoreBg"
+        app:layout_constraintHorizontal_bias="0.566"
+        app:layout_constraintStart_toStartOf="@+id/tvScoreBg"
+        app:layout_constraintTop_toTopOf="@+id/tvScoreBg"
+        app:layout_constraintVertical_bias="0.024" />
+
+    <TextView
         android:id="@+id/tvBest"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -111,6 +133,18 @@
         app:layout_constraintStart_toStartOf="@+id/tvBestBg"
         app:layout_constraintTop_toTopOf="@+id/tvBestBg"
         app:layout_constraintVertical_bias="0.7" />
+
+    <TextView
+        android:id="@+id/tvBestTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/title_best"
+        android:textColor="@color/font_color_main"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@+id/tvBestBg"
+        app:layout_constraintHorizontal_bias="0.554"
+        app:layout_constraintStart_toStartOf="@+id/tvBestBg"
+        app:layout_constraintTop_toTopOf="@+id/tvBestBg" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/boardContainer"
