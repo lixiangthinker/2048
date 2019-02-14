@@ -1,6 +1,6 @@
 package com.tony.builder.game2048.di;
 
-import com.tony.builder.game2048.viewmodel.GameBoardViewmodel;
+import com.tony.builder.game2048.viewmodel.GameBoardViewModel;
 import com.tony.builder.game2048.viewmodel.GameViewModelFactory;
 
 import androidx.lifecycle.ViewModel;
@@ -13,8 +13,8 @@ import dagger.multibindings.IntoMap;
 abstract public class ViewModelModule {
     @Binds
     @IntoMap
-    @ViewModelKey(GameBoardViewmodel.class)
-    abstract ViewModel bindGameBoardViewModel(GameBoardViewmodel gameBoardViewmodel);
+    @ViewModelKey(GameBoardViewModel.class)
+    abstract ViewModel bindGameBoardViewModel(GameBoardViewModel gameBoardViewmodel);
 
     @Binds
     abstract ViewModelProvider.Factory bindViewModelFactory(GameViewModelFactory factory);

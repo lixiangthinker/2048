@@ -15,8 +15,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class GameBoardViewmodel extends ViewModel {
-    private static final String TAG = "GameBoardViewmodel";
+public class GameBoardViewModel extends ViewModel {
+    private static final String TAG = "GameBoardViewModel";
     private MutableLiveData<Integer> mScore;
     private MutableLiveData<Integer> mBest;
 
@@ -32,7 +32,7 @@ public class GameBoardViewmodel extends ViewModel {
     private AppExecutors executors;
 
     @Inject
-    public GameBoardViewmodel(AppExecutors executors, BoardModel boardModel) {
+    public GameBoardViewModel(AppExecutors executors, BoardModel boardModel) {
         this.executors = executors;
         setBoardModel(boardModel);
     }

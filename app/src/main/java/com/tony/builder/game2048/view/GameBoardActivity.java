@@ -29,7 +29,7 @@ import android.widget.Toast;
 
 import com.tony.builder.game2048.R;
 import com.tony.builder.game2048.model.Point;
-import com.tony.builder.game2048.viewmodel.GameBoardViewmodel;
+import com.tony.builder.game2048.viewmodel.GameBoardViewModel;
 import com.tony.builder.game2048.viewmodel.event.CardGenEvent;
 import com.tony.builder.game2048.viewmodel.event.MergeEvent;
 import com.tony.builder.game2048.viewmodel.event.MoveEvent;
@@ -48,7 +48,7 @@ public class GameBoardActivity extends DaggerAppCompatActivity {
     ConstraintLayout boardContainer;
     @Inject
     ViewModelProvider.Factory viewModelFactory;
-    GameBoardViewmodel viewmodel;
+    GameBoardViewModel viewmodel;
 
     @Inject
     SharedPreferences sharedPreferences;
@@ -66,7 +66,7 @@ public class GameBoardActivity extends DaggerAppCompatActivity {
         btnNewGame = findViewById(R.id.btnNewgame);
         boardContainer = findViewById(R.id.boardContainer);
 
-        viewmodel = ViewModelProviders.of(this, viewModelFactory).get(GameBoardViewmodel.class);
+        viewmodel = ViewModelProviders.of(this, viewModelFactory).get(GameBoardViewModel.class);
         subscribe(viewmodel);
         registerMotionMonitor();
         viewmodel.onStartGame();
@@ -111,7 +111,7 @@ public class GameBoardActivity extends DaggerAppCompatActivity {
         return resId;
     }
 
-    private void subscribe(GameBoardViewmodel model) {
+    private void subscribe(GameBoardViewModel model) {
         model.getScore().observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(Integer score) {
