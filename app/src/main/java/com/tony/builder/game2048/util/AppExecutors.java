@@ -7,6 +7,9 @@ import android.os.Looper;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import androidx.annotation.NonNull;
 
 /**
@@ -15,17 +18,13 @@ import androidx.annotation.NonNull;
  * Grouping tasks like this avoids the effects of task starvation (e.g. disk reads don't wait behind
  * webservice requests).
  */
+@Singleton
 public class AppExecutors {
     private final Executor diskIO;
     private final Executor networkIO;
     private final Executor mainThread;
 
-    public AppExecutors(Executor diskIO, Executor networkIO, Executor mainThread) {
-        this.diskIO = diskIO;
-        this.networkIO = networkIO;
-        this.mainThread = mainThread;
-    }
-
+    @Inject
     public AppExecutors() {
         this.diskIO = Executors.newSingleThreadExecutor();
         this.networkIO = Executors.newFixedThreadPool(3);

@@ -1,15 +1,17 @@
 package com.tony.builder.game2048.view;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.GestureDetectorCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
+import dagger.android.support.DaggerAppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -26,14 +28,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tony.builder.game2048.R;
-import com.tony.builder.game2048.model.BoardModel;
 import com.tony.builder.game2048.model.Point;
 import com.tony.builder.game2048.viewmodel.GameBoardViewmodel;
 import com.tony.builder.game2048.viewmodel.event.CardGenEvent;
 import com.tony.builder.game2048.viewmodel.event.MergeEvent;
 import com.tony.builder.game2048.viewmodel.event.MoveEvent;
 
-public class GameBoardActivity extends AppCompatActivity {
+import javax.inject.Inject;
+
+public class GameBoardActivity extends DaggerAppCompatActivity {
     private static final String TAG = "GameBoardActivity";
     private static final int BOARD_DIMENSION = 4;
     TextView[][] tvCards = new TextView[BOARD_DIMENSION][BOARD_DIMENSION];
@@ -43,12 +46,16 @@ public class GameBoardActivity extends AppCompatActivity {
 
     private GestureDetectorCompat mDetector;
     ConstraintLayout boardContainer;
+    @Inject
+    ViewModelProvider.Factory viewModelFactory;
     GameBoardViewmodel viewmodel;
+
+    @Inject
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //requestWindowFeature(Window.FEATURE_NO_TITLE); //not working for AppCompatActivity
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
@@ -59,8 +66,7 @@ public class GameBoardActivity extends AppCompatActivity {
         btnNewGame = findViewById(R.id.btnNewgame);
         boardContainer = findViewById(R.id.boardContainer);
 
-        viewmodel = ViewModelProviders.of(this).get(GameBoardViewmodel.class);
-        viewmodel.setBoardModel(new BoardModel());
+        viewmodel = ViewModelProviders.of(this, viewModelFactory).get(GameBoardViewmodel.class);
         subscribe(viewmodel);
         registerMotionMonitor();
         viewmodel.onStartGame();

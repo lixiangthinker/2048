@@ -6,6 +6,10 @@ import com.tony.builder.game2048.view.IMotionHandler;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+@Singleton
 public class BoardModel implements IMotionHandler {
     public static final int BOARD_DIMENSION = 4;
     private static final double PROBABILITY_OF_FOUR = 0.4;
@@ -25,6 +29,7 @@ public class BoardModel implements IMotionHandler {
         void onGameFinished();
     }
 
+    @Inject
     public BoardModel() {
         startGame();
     }

@@ -9,6 +9,8 @@ import com.tony.builder.game2048.viewmodel.event.CardGenEvent;
 import com.tony.builder.game2048.viewmodel.event.MergeEvent;
 import com.tony.builder.game2048.viewmodel.event.MoveEvent;
 
+import javax.inject.Inject;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -27,9 +29,15 @@ public class GameBoardViewmodel extends ViewModel {
     private MutableLiveData<MoveEvent> mMoveEvent;
     private MutableLiveData<CardGenEvent> mCardGenEvent;
 
-    private AppExecutors executors = new AppExecutors();
+    private AppExecutors executors;
 
-    public void setBoardModel(BoardModel boardModel) {
+    @Inject
+    public GameBoardViewmodel(AppExecutors executors, BoardModel boardModel) {
+        this.executors = executors;
+        setBoardModel(boardModel);
+    }
+
+    private void setBoardModel(BoardModel boardModel) {
         this.boardModel = boardModel;
         boardModel.setBoardEventListener(new BoardModel.BoardEventListener() {
             @Override
