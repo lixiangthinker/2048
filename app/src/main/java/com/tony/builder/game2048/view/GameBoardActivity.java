@@ -29,6 +29,7 @@ import com.tony.builder.game2048.R;
 import com.tony.builder.game2048.model.BoardModel;
 import com.tony.builder.game2048.model.Point;
 import com.tony.builder.game2048.viewmodel.GameBoardViewmodel;
+import com.tony.builder.game2048.viewmodel.event.CardGenEvent;
 import com.tony.builder.game2048.viewmodel.event.MergeEvent;
 import com.tony.builder.game2048.viewmodel.event.MoveEvent;
 
@@ -133,7 +134,12 @@ public class GameBoardActivity extends AppCompatActivity {
                 card.observe(this, new CardObserver(x, y));
             }
         }
-
+        model.getCardGenEvent().observe(this, new Observer<CardGenEvent>() {
+            @Override
+            public void onChanged(CardGenEvent cardGenEvent) {
+                generateCards(cardGenEvent.position.x, cardGenEvent.position.y, cardGenEvent.value);
+            }
+        });
         model.getMergeEvent().observe(this, new Observer<MergeEvent>() {
             @Override
             public void onChanged(MergeEvent mergeEvent) {

@@ -5,6 +5,7 @@ import android.util.Log;
 import com.tony.builder.game2048.model.BoardModel;
 import com.tony.builder.game2048.model.Point;
 import com.tony.builder.game2048.util.AppExecutors;
+import com.tony.builder.game2048.viewmodel.event.CardGenEvent;
 import com.tony.builder.game2048.viewmodel.event.MergeEvent;
 import com.tony.builder.game2048.viewmodel.event.MoveEvent;
 
@@ -24,6 +25,7 @@ public class GameBoardViewmodel extends ViewModel {
 
     private MutableLiveData<MergeEvent> mMergeEvent;
     private MutableLiveData<MoveEvent> mMoveEvent;
+    private MutableLiveData<CardGenEvent> mCardGenEvent;
 
     private AppExecutors executors = new AppExecutors();
 
@@ -51,7 +53,8 @@ public class GameBoardViewmodel extends ViewModel {
             @Override
             public void onCardGenerated(Point pt, int value) {
                 Log.d(TAG, "onCardGenerated ["+pt.x+","+pt.y+"] = "+value);
-                if (mCards != null) {
+                if (mCardGenEvent != null) {
+                    mCardGenEvent.postValue(new CardGenEvent(pt, value));
                     mCards[pt.y][pt.x].postValue(value);
                 }
             }
@@ -123,6 +126,13 @@ public class GameBoardViewmodel extends ViewModel {
             mMoveEvent = new MutableLiveData<>();
         }
         return mMoveEvent;
+    }
+
+    public LiveData<CardGenEvent> getCardGenEvent() {
+        if (mCardGenEvent == null) {
+            mCardGenEvent = new MutableLiveData<>();
+        }
+        return mCardGenEvent;
     }
 
     public LiveData<Integer> getScore() {
