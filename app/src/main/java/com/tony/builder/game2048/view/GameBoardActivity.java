@@ -48,7 +48,7 @@ public class GameBoardActivity extends DaggerAppCompatActivity {
     ConstraintLayout boardContainer;
     @Inject
     ViewModelProvider.Factory viewModelFactory;
-    GameBoardViewModel viewmodel;
+    GameBoardViewModel viewModel;
 
     @Inject
     SharedPreferences sharedPreferences;
@@ -66,15 +66,15 @@ public class GameBoardActivity extends DaggerAppCompatActivity {
         btnNewGame = findViewById(R.id.btnNewgame);
         boardContainer = findViewById(R.id.boardContainer);
 
-        viewmodel = ViewModelProviders.of(this, viewModelFactory).get(GameBoardViewModel.class);
-        subscribe(viewmodel);
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(GameBoardViewModel.class);
+        subscribe(viewModel);
         registerMotionMonitor();
-        viewmodel.onStartGame();
+        viewModel.onStartGame();
 
         btnNewGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                viewmodel.onStartGame();
+                viewModel.onStartGame();
             }
         });
     }
@@ -107,8 +107,7 @@ public class GameBoardActivity extends DaggerAppCompatActivity {
 
     private int getId(String idName) {
         Resources resources = getResources();
-        int resId = resources.getIdentifier(idName, "id", getPackageName());
-        return resId;
+        return resources.getIdentifier(idName, "id", getPackageName());
     }
 
     private void subscribe(GameBoardViewModel model) {
@@ -216,7 +215,7 @@ public class GameBoardActivity extends DaggerAppCompatActivity {
     private int getColorId(Integer value) {
         int result = R.color.card_0;
         if (value <= 0) {
-            result = R.color.card_0;
+            return result;
         } else if (value == 2) {
             result = R.color.card_2;
         } else if (value == 4) {
@@ -255,7 +254,7 @@ public class GameBoardActivity extends DaggerAppCompatActivity {
                     @Override
                     public boolean onFling(MotionEvent event1, MotionEvent event2,
                                            float velocityX, float velocityY) {
-                        viewmodel.onFling(velocityX, velocityY);
+                        viewModel.onFling(velocityX, velocityY);
                         return true;
                     }
                 });
@@ -276,7 +275,7 @@ public class GameBoardActivity extends DaggerAppCompatActivity {
         builder.setPositiveButton("Restart", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                viewmodel.onStartGame();
+                viewModel.onStartGame();
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
