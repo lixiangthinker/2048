@@ -1,5 +1,6 @@
 package com.tony.builder.game2048.viewmodel;
 
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.tony.builder.game2048.model.BoardModel;
@@ -18,6 +19,7 @@ import androidx.lifecycle.ViewModel;
 public class GameBoardViewModel extends ViewModel {
     private static final String TAG = "GameBoardViewModel";
     private MutableLiveData<Integer> mScore;
+    private static final String KEY_BEST_SCORE = "best_score";
     private MutableLiveData<Integer> mBest;
 
     private MutableLiveData<Integer>[][] mCards;
@@ -30,10 +32,12 @@ public class GameBoardViewModel extends ViewModel {
     private MutableLiveData<CardGenEvent> mCardGenEvent;
 
     private AppExecutors executors;
+    private SharedPreferences sharedPreferences;
 
     @Inject
-    public GameBoardViewModel(AppExecutors executors, BoardModel boardModel) {
+    public GameBoardViewModel(AppExecutors executors, BoardModel boardModel, SharedPreferences sharedPreferences) {
         this.executors = executors;
+        this.sharedPreferences = sharedPreferences;
         setBoardModel(boardModel);
     }
 
@@ -110,9 +114,28 @@ public class GameBoardViewModel extends ViewModel {
                 if (isGameFinished != null) {
                     isGameFinished.postValue(true);
                 }
-                // TODO: save best score;
+                updateBestScore();
             }
         });
+    }
+
+    private void updateBestScore() {
+        if (mBest == null || mScore == null) {
+            Log.e(TAG, "could not update best score");
+            return;
+        }
+        int best = mBest.getValue();
+        int score = mScore.getValue();
+        if (best >= score) {
+            Log.i(TAG, "do not need to update score");
+            return;
+        }
+        if (sharedPreferences != null) {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putInt(KEY_BEST_SCORE, score);
+            editor.apply();
+        }
+        mBest.postValue(score);
     }
 
     public LiveData<Boolean> getGameFinishedFlag() {
@@ -164,7 +187,10 @@ public class GameBoardViewModel extends ViewModel {
     }
 
     private void loadBest() {
-        // TODO: get score from shared preference
+        if (sharedPreferences != null) {
+            int best = sharedPreferences.getInt(KEY_BEST_SCORE, 0);
+            mBest.postValue(best);
+        }
     }
 
     public LiveData<Integer>[][] getCards() {
