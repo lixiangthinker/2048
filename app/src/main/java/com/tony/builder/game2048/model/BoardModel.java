@@ -2,6 +2,7 @@ package com.tony.builder.game2048.model;
 
 import com.tony.builder.game2048.util.DumpUtils;
 import com.tony.builder.game2048.view.IMotionHandler;
+import com.tony.kotlin.libboardview.Point;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -13,7 +14,7 @@ import javax.inject.Singleton;
 public class BoardModel implements IMotionHandler {
     public static final int BOARD_DIMENSION = 4;
     private static final double PROBABILITY_OF_FOUR = 0.4;
-    private int cardMap[][];
+    private int[][] cardMap;
     private List<Point> emptyPointList;
     private BoardEventListener boardEventListener = null;
 
@@ -82,9 +83,9 @@ public class BoardModel implements IMotionHandler {
 
         // gen 1 card at empty point.
         Point pt = emptyPointList.remove((int) (Math.random() * emptyPointList.size()));
-        cardMap[pt.y][pt.x] = Math.random() > PROBABILITY_OF_FOUR ? 2 : 4;
+        cardMap[pt.getY()][pt.getX()] = Math.random() > PROBABILITY_OF_FOUR ? 2 : 4;
         if (boardEventListener != null) {
-            boardEventListener.onCardGenerated(pt, cardMap[pt.y][pt.x]);
+            boardEventListener.onCardGenerated(pt, cardMap[pt.getY()][pt.getX()]);
         }
 
         // check after 1 card is generated.
@@ -184,8 +185,8 @@ public class BoardModel implements IMotionHandler {
                     }
 
                     if (pt != null) {
-                        cardMap[y][x] = cardMap[pt.y][pt.x];
-                        cardMap[pt.y][pt.x] = 0;
+                        cardMap[y][x] = cardMap[pt.getY()][pt.getX()];
+                        cardMap[pt.getY()][pt.getX()] = 0;
                         changeResult = true;
                         notifyMoveEvent(pt, new Point(x, y));
                     } else {
@@ -228,8 +229,8 @@ public class BoardModel implements IMotionHandler {
                     }
 
                     if (pt != null) {
-                        cardMap[y][x] = cardMap[pt.y][pt.x];
-                        cardMap[pt.y][pt.x] = 0;
+                        cardMap[y][x] = cardMap[pt.getY()][pt.getX()];
+                        cardMap[pt.getY()][pt.getX()] = 0;
                         changeResult = true;
                         notifyMoveEvent(pt, new Point(x, y));
                     } else {
@@ -259,14 +260,14 @@ public class BoardModel implements IMotionHandler {
     private void notifyMergeEvent(Point source, Point sink) {
         if (boardEventListener != null) {
             boardEventListener.onCardMerged(source, sink,
-                    cardMap[source.y][source.x], cardMap[sink.y][sink.x]);
+                    cardMap[source.getY()][source.getX()], cardMap[sink.getY()][sink.getX()]);
         }
     }
 
     private void notifyMoveEvent(Point source, Point sink) {
         if (boardEventListener != null) {
             boardEventListener.onCardMoved(source, sink,
-                    cardMap[source.y][source.x], cardMap[sink.y][sink.x]);
+                    cardMap[source.getY()][source.getX()], cardMap[sink.getY()][sink.getX()]);
         }
     }
 
@@ -286,8 +287,8 @@ public class BoardModel implements IMotionHandler {
                     }
 
                     if (pt != null) {
-                        cardMap[y][x] = cardMap[pt.y][pt.x];
-                        cardMap[pt.y][pt.x] = 0;
+                        cardMap[y][x] = cardMap[pt.getY()][pt.getX()];
+                        cardMap[pt.getY()][pt.getX()] = 0;
                         changeResult = true;
                         notifyMoveEvent(pt, new Point(x, y));
                     } else {
@@ -330,8 +331,8 @@ public class BoardModel implements IMotionHandler {
                     }
 
                     if (pt != null) {
-                        cardMap[y][x] = cardMap[pt.y][pt.x];
-                        cardMap[pt.y][pt.x] = 0;
+                        cardMap[y][x] = cardMap[pt.getY()][pt.getX()];
+                        cardMap[pt.getY()][pt.getX()] = 0;
                         changeResult = true;
                         notifyMoveEvent(pt, new Point(x, y));
                     } else {

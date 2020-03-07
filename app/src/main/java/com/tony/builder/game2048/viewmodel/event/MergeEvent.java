@@ -1,8 +1,8 @@
 package com.tony.builder.game2048.viewmodel.event;
 
-import com.tony.builder.game2048.model.Point;
-
 import androidx.annotation.NonNull;
+
+import com.tony.kotlin.libboardview.Point;
 
 public class MergeEvent {
     public Point source;
@@ -19,7 +19,7 @@ public class MergeEvent {
     @NonNull
     @Override
     public String toString() {
-        String result = "["+source.x+","+source.y+"] -> ["+sink.x+","+sink.y+"], "+sourceValue+"->"+sinkValue;
+        String result = "["+source.getX()+","+source.getY()+"] -> ["+sink.getX()+","+sink.getY()+"], "+sourceValue+"->"+sinkValue;
         return result;
     }
 }

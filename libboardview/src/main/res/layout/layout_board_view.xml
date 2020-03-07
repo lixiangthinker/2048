@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/margin_normal">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/boardContainer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/margin_normal"
+        android:background="@drawable/board_background"
+        android:padding="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/card00"
+            style="@style/card_style"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/card10"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toStartOf="@+id/card01"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tool:text="card00" />
+
+        <TextView
+            android:id="@+id/card01"
+            style="@style/card_style"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/card11"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toStartOf="@+id/card02"
+            app:layout_constraintStart_toEndOf="@+id/card00"
+            app:layout_constraintTop_toTopOf="parent"
+            tool:text="card01" />
+
+        <TextView
+            android:id="@+id/card02"
+            style="@style/card_style"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/card12"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toStartOf="@id/card03"
+            app:layout_constraintStart_toEndOf="@id/card01"
+            app:layout_constraintTop_toTopOf="parent"
+            tool:text="card02" />
+
+        <TextView
+            android:id="@+id/card03"
+            style="@style/card_style"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/card13"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/card02"
+            app:layout_constraintTop_toTopOf="parent"
+            tool:text="card03" />
+
+        <TextView
+            android:id="@+id/card10"
+            style="@style/card_style"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/card20"
+            app:layout_constraintEnd_toStartOf="@+id/card11"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/card00"
+            tool:text="card10" />
+
+        <TextView
+            android:id="@+id/card11"
+            style="@style/card_style"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/card21"
+            app:layout_constraintEnd_toStartOf="@id/card12"
+            app:layout_constraintStart_toEndOf="@id/card10"
+            app:layout_constraintTop_toBottomOf="@id/card01"
+            tool:text="card11" />
+
+        <TextView
+            android:id="@+id/card12"
+            style="@style/card_style"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/card22"
+            app:layout_constraintEnd_toStartOf="@id/card13"
+            app:layout_constraintStart_toEndOf="@id/card11"
+            app:layout_constraintTop_toBottomOf="@id/card02"
+            tool:text="card12" />
+
+        <TextView
+            android:id="@+id/card13"
+            style="@style/card_style"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/card23"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/card12"
+            app:layout_constraintTop_toBottomOf="@id/card03"
+            tool:text="card13" />
+
+        <TextView
+            android:id="@+id/card20"
+            style="@style/card_style"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/card30"
+            app:layout_constraintEnd_toStartOf="@id/card21"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/card10"
+            tool:text="card20" />
+
+        <TextView
+            android:id="@+id/card21"
+            style="@style/card_style"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/card31"
+            app:layout_constraintEnd_toStartOf="@id/card22"
+            app:layout_constraintStart_toEndOf="@id/card20"
+            app:layout_constraintTop_toBottomOf="@id/card11"
+            tool:text="card21" />
+
+        <TextView
+            android:id="@+id/card22"
+            style="@style/card_style"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/card32"
+            app:layout_constraintEnd_toStartOf="@id/card23"
+            app:layout_constraintStart_toEndOf="@id/card21"
+            app:layout_constraintTop_toBottomOf="@id/card12"
+            tool:text="card22" />
+
+        <TextView
+            android:id="@+id/card23"
+            style="@style/card_style"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/card33"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/card22"
+            app:layout_constraintTop_toBottomOf="@id/card13"
+            tool:text="card23" />
+
+        <TextView
+            android:id="@+id/card30"
+            style="@style/card_style"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/card31"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/card20"
+            tool:text="card30" />
+
+        <TextView
+            android:id="@+id/card31"
+            style="@style/card_style"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/card32"
+            app:layout_constraintStart_toEndOf="@id/card30"
+            app:layout_constraintTop_toBottomOf="@id/card21"
+            tool:text="card31" />
+
+        <TextView
+            android:id="@+id/card32"
+            style="@style/card_style"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/card33"
+            app:layout_constraintStart_toEndOf="@id/card31"
+            app:layout_constraintTop_toBottomOf="@id/card22"
+            tool:text="card32" />
+
+        <TextView
+            android:id="@+id/card33"
+            style="@style/card_style"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/card32"
+            app:layout_constraintTop_toBottomOf="@id/card23"
+            tool:text="card33" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

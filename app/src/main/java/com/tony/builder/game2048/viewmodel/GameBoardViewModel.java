@@ -4,11 +4,11 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.tony.builder.game2048.model.BoardModel;
-import com.tony.builder.game2048.model.Point;
 import com.tony.builder.game2048.util.AppExecutors;
 import com.tony.builder.game2048.viewmodel.event.CardGenEvent;
 import com.tony.builder.game2048.viewmodel.event.MergeEvent;
 import com.tony.builder.game2048.viewmodel.event.MoveEvent;
+import com.tony.kotlin.libboardview.Point;
 
 import javax.inject.Inject;
 
@@ -64,10 +64,10 @@ public class GameBoardViewModel extends ViewModel {
 
             @Override
             public void onCardGenerated(Point pt, int value) {
-                Log.d(TAG, "onCardGenerated ["+pt.x+","+pt.y+"] = "+value);
+                Log.d(TAG, "onCardGenerated ["+pt.getX()+","+pt.getY()+"] = "+value);
                 if (mCardGenEvent != null) {
                     mCardGenEvent.postValue(new CardGenEvent(pt, value));
-                    mCards[pt.y][pt.x].postValue(value);
+                    mCards[pt.getY()][pt.getY()].postValue(value);
                 }
             }
 
@@ -76,8 +76,8 @@ public class GameBoardViewModel extends ViewModel {
                 executors.mainThread().execute(new Runnable() {
                     @Override
                     public void run() {
-                        Log.d(TAG, "onCardMerged ["+source.x+","+source.y+"] = "+sourceValue+
-                                " -> ["+sink.x+","+sink.y+"] = "+sinkValue);
+                        Log.d(TAG, "onCardMerged ["+source.getX()+","+source.getY()+"] = "+sourceValue+
+                                " -> ["+sink.getX()+","+sink.getY()+"] = "+sinkValue);
 
                         if (mMergeEvent != null) {
                             mMergeEvent.setValue(new MergeEvent(source, sink, sourceValue, sinkValue));
@@ -98,8 +98,8 @@ public class GameBoardViewModel extends ViewModel {
                 executors.mainThread().execute(new Runnable() {
                     @Override
                     public void run() {
-                        Log.d(TAG, "onCardMoved ["+source.x+","+source.y+"] = "+sourceValue+
-                                " -> ["+sink.x+","+sink.y+"] = "+sinkValue);
+                        Log.d(TAG, "onCardMoved ["+source.getX()+","+source.getY()+"] = "+sourceValue+
+                                " -> ["+sink.getX()+","+sink.getY()+"] = "+sinkValue);
 
                         if (mMoveEvent != null) {
                             mMoveEvent.setValue(new MoveEvent(source, sink, sourceValue, sinkValue));
