@@ -10,8 +10,6 @@ import com.tony.builder.game2048.viewmodel.event.MergeEvent;
 import com.tony.builder.game2048.viewmodel.event.MoveEvent;
 import com.tony.kotlin.libboardview.Point;
 
-import javax.inject.Inject;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -32,12 +30,9 @@ public class GameBoardViewModel extends ViewModel {
     private MutableLiveData<CardGenEvent> mCardGenEvent;
 
     private AppExecutors executors;
-    private SharedPreferences sharedPreferences;
 
-    @Inject
-    public GameBoardViewModel(AppExecutors executors, BoardModel boardModel, SharedPreferences sharedPreferences) {
+    public GameBoardViewModel(AppExecutors executors, BoardModel boardModel) {
         this.executors = executors;
-        this.sharedPreferences = sharedPreferences;
         setBoardModel(boardModel);
     }
 
@@ -130,11 +125,7 @@ public class GameBoardViewModel extends ViewModel {
             Log.i(TAG, "do not need to update score");
             return;
         }
-        if (sharedPreferences != null) {
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putInt(KEY_BEST_SCORE, score);
-            editor.apply();
-        }
+
         mBest.postValue(score);
     }
 
@@ -187,10 +178,10 @@ public class GameBoardViewModel extends ViewModel {
     }
 
     private void loadBest() {
-        if (sharedPreferences != null) {
-            int best = sharedPreferences.getInt(KEY_BEST_SCORE, 0);
-            mBest.postValue(best);
-        }
+//        if (sharedPreferences != null) {
+//            int best = sharedPreferences.getInt(KEY_BEST_SCORE, 0);
+//            mBest.postValue(best);
+//        }
     }
 
     public LiveData<Integer>[][] getCards() {

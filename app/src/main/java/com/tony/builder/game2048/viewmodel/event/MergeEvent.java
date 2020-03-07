@@ -19,7 +19,6 @@ public class MergeEvent {
     @NonNull
     @Override
     public String toString() {
-        String result = "["+source.getX()+","+source.getY()+"] -> ["+sink.getX()+","+sink.getY()+"], "+sourceValue+"->"+sinkValue;
-        return result;
+        return "["+source.getX()+","+source.getY()+"] -> ["+sink.getX()+","+sink.getY()+"], "+sourceValue+"->"+sinkValue;
     }
 }

@@ -1,12 +1,12 @@
 package com.tony.builder.game2048.view;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.GestureDetectorCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import dagger.android.support.DaggerAppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
@@ -20,12 +20,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tony.builder.game2048.R;
+import com.tony.builder.game2048.model.BoardModel;
+import com.tony.builder.game2048.util.AppExecutors;
 import com.tony.builder.game2048.viewmodel.GameBoardViewModel;
+import com.tony.builder.game2048.viewmodel.GameBoardViewModelFactory;
 import com.tony.kotlin.libboardview.BoardView;
 
-import javax.inject.Inject;
-
-public class GameBoardActivity extends DaggerAppCompatActivity {
+public class GameBoardActivity extends AppCompatActivity {
     private static final String TAG = "GameBoardActivity";
     TextView tvScore;
     TextView tvBest;
@@ -33,13 +34,7 @@ public class GameBoardActivity extends DaggerAppCompatActivity {
     BoardView boardView;
 
     private GestureDetectorCompat mDetector;
-    ConstraintLayout boardContainer;
-    @Inject
-    ViewModelProvider.Factory viewModelFactory;
     GameBoardViewModel viewModel;
-
-    @Inject
-    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,8 +47,8 @@ public class GameBoardActivity extends DaggerAppCompatActivity {
         tvScore = findViewById(R.id.tvScore);
         tvBest = findViewById(R.id.tvBest);
         btnNewGame = findViewById(R.id.btnNewgame);
-        boardContainer = findViewById(R.id.boardContainer);
-
+        GameBoardViewModelFactory viewModelFactory =
+                new GameBoardViewModelFactory(new AppExecutors(), new BoardModel());
         viewModel = new ViewModelProvider(this, viewModelFactory).get(GameBoardViewModel.class);
         subscribe(viewModel);
         registerMotionMonitor();
@@ -127,7 +122,7 @@ public class GameBoardActivity extends DaggerAppCompatActivity {
                         return true;
                     }
                 });
-        boardContainer.setOnTouchListener((v, event) -> mDetector.onTouchEvent(event));
+        boardView.setOnTouchListener((v, event) -> mDetector.onTouchEvent(event));
     }
 
     private void showSimpleDialog() {
