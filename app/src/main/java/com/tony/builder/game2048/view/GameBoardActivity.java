@@ -2,36 +2,30 @@ package com.tony.builder.game2048.view;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.GestureDetectorCompat;
+import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tony.builder.game2048.R;
+import com.tony.builder.game2048.databinding.ActivityMainBinding;
 import com.tony.builder.game2048.model.BoardModel;
 import com.tony.builder.game2048.util.AppExecutors;
 import com.tony.builder.game2048.viewmodel.GameBoardViewModel;
 import com.tony.builder.game2048.viewmodel.GameBoardViewModelFactory;
-import com.tony.kotlin.libboardview.BoardView;
 
 public class GameBoardActivity extends AppCompatActivity {
     private static final String TAG = "GameBoardActivity";
-    TextView tvScore;
-    TextView tvBest;
-    Button btnNewGame;
-    BoardView boardView;
+    ActivityMainBinding binding;
 
     private GestureDetectorCompat mDetector;
     GameBoardViewModel viewModel;
@@ -42,24 +36,19 @@ public class GameBoardActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
-        setContentView(R.layout.activity_main);
-        boardView = findViewById(R.id.boardView);
-        tvScore = findViewById(R.id.tvScore);
-        tvBest = findViewById(R.id.tvBest);
-        btnNewGame = findViewById(R.id.btnNewgame);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         GameBoardViewModelFactory viewModelFactory =
                 new GameBoardViewModelFactory(new AppExecutors(), new BoardModel());
         viewModel = new ViewModelProvider(this, viewModelFactory).get(GameBoardViewModel.class);
+        binding.setViewModel(viewModel);
         subscribe(viewModel);
         registerMotionMonitor();
         viewModel.onStartGame();
-
-        btnNewGame.setOnClickListener(v -> viewModel.onStartGame());
     }
 
     private void subscribe(GameBoardViewModel model) {
-        model.getScore().observe(this, score -> tvScore.setText(String.valueOf(score)));
-        model.getBest().observe(this, best -> tvBest.setText(String.valueOf(best)));
+        model.getScore().observe(this, score -> binding.tvScore.setText(String.valueOf(score)));
+        model.getBest().observe(this, best -> binding.tvBest.setText(String.valueOf(best)));
         model.getGameFinishedFlag().observe(this, flag -> {
             if (flag) {
                 showSimpleDialog();
@@ -73,21 +62,21 @@ public class GameBoardActivity extends AppCompatActivity {
             }
         }
         model.getCardGenEvent().observe(this, cardGenEvent ->
-                boardView.onNewCard(cardGenEvent.position.getX(), cardGenEvent.position.getY(), cardGenEvent.value));
+                binding.boardView.onNewCard(cardGenEvent.position.getX(), cardGenEvent.position.getY(), cardGenEvent.value));
         model.getMergeEvent().observe(this, mergeEvent -> {
             Log.d(TAG, "onMergeEvent " + mergeEvent);
-            boardView.onNewCard(mergeEvent.source.getX(), mergeEvent.source.getY(), mergeEvent.sourceValue);
+            binding.boardView.onNewCard(mergeEvent.source.getX(), mergeEvent.source.getY(), mergeEvent.sourceValue);
             //source move to sink
-            boardView.onMoveCards(mergeEvent.source, mergeEvent.sink);
-            boardView.onNewCard(mergeEvent.sink.getX(), mergeEvent.sink.getY(), mergeEvent.sinkValue);
+            binding.boardView.onMoveCards(mergeEvent.source, mergeEvent.sink);
+            binding.boardView.onNewCard(mergeEvent.sink.getX(), mergeEvent.sink.getY(), mergeEvent.sinkValue);
         });
 
         model.getMoveEvent().observe(this, moveEvent -> {
             Log.d(TAG, "onMergeEvent " + moveEvent);
-            boardView.onNewCard(moveEvent.source.getX(), moveEvent.source.getY(), moveEvent.sourceValue);
+            binding.boardView.onNewCard(moveEvent.source.getX(), moveEvent.source.getY(), moveEvent.sourceValue);
             //source move to sink
-            boardView.onMoveCards(moveEvent.source, moveEvent.sink);
-            boardView.onNewCard(moveEvent.sink.getX(), moveEvent.sink.getY(), moveEvent.sinkValue);
+            binding.boardView.onMoveCards(moveEvent.source, moveEvent.sink);
+            binding.boardView.onNewCard(moveEvent.sink.getX(), moveEvent.sink.getY(), moveEvent.sinkValue);
         });
     }
 
@@ -102,7 +91,7 @@ public class GameBoardActivity extends AppCompatActivity {
 
         @Override
         public void onChanged(Integer value) {
-            boardView.onNewCard(x, y, value);
+            binding.boardView.onNewCard(x, y, value);
         }
     }
 
@@ -122,7 +111,7 @@ public class GameBoardActivity extends AppCompatActivity {
                         return true;
                     }
                 });
-        boardView.setOnTouchListener((v, event) -> mDetector.onTouchEvent(event));
+        binding.boardView.setOnTouchListener((v, event) -> mDetector.onTouchEvent(event));
     }
 
     private void showSimpleDialog() {

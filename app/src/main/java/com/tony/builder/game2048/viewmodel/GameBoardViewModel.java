@@ -1,6 +1,5 @@
 package com.tony.builder.game2048.viewmodel;
 
-import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.tony.builder.game2048.model.BoardModel;
@@ -17,7 +16,6 @@ import androidx.lifecycle.ViewModel;
 public class GameBoardViewModel extends ViewModel {
     private static final String TAG = "GameBoardViewModel";
     private MutableLiveData<Integer> mScore;
-    private static final String KEY_BEST_SCORE = "best_score";
     private MutableLiveData<Integer> mBest;
 
     private MutableLiveData<Integer>[][] mCards;
