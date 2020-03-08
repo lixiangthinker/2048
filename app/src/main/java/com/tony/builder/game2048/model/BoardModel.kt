@@ -31,18 +31,18 @@ class BoardModel : IMotionHandler {
         genRandomCards()
     }
 
-    fun startGame() {
-        cardMap = Array(BOARD_DIMENSION) { IntArray(BOARD_DIMENSION) }
-        emptyPointList = LinkedList()
+    // for inject cardmap and emptyPointList;
+    constructor(cardMap: Array<IntArray>, emptyPointList: MutableList<Point>) {
+        this.cardMap = cardMap
+        this.emptyPointList = emptyPointList
         resetCardBoard()
         genRandomCards()
         genRandomCards()
     }
 
-    // for inject cardmap and emptyPointList;
-    constructor(cardMap: Array<IntArray>, emptyPointList: MutableList<Point>) {
-        this.cardMap = cardMap
-        this.emptyPointList = emptyPointList
+    fun startGame() {
+        cardMap = Array(BOARD_DIMENSION) { IntArray(BOARD_DIMENSION) }
+        emptyPointList = LinkedList()
         resetCardBoard()
         genRandomCards()
         genRandomCards()
