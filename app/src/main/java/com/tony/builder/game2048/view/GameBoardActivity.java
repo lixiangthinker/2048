@@ -19,7 +19,6 @@ import android.widget.Toast;
 import com.tony.builder.game2048.R;
 import com.tony.builder.game2048.databinding.ActivityMainBinding;
 import com.tony.builder.game2048.model.BoardModel;
-import com.tony.builder.game2048.util.AppExecutors;
 import com.tony.builder.game2048.viewmodel.GameBoardViewModel;
 import com.tony.builder.game2048.viewmodel.GameBoardViewModelFactory;
 
@@ -38,7 +37,7 @@ public class GameBoardActivity extends AppCompatActivity {
         }
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         GameBoardViewModelFactory viewModelFactory =
-                new GameBoardViewModelFactory(new AppExecutors(), new BoardModel());
+                new GameBoardViewModelFactory(new BoardModel());
         viewModel = new ViewModelProvider(this, viewModelFactory).get(GameBoardViewModel.class);
         binding.setViewModel(viewModel);
         subscribe(viewModel);

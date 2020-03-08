@@ -3,7 +3,6 @@ package com.tony.builder.game2048.viewmodel;
 import android.util.Log;
 
 import com.tony.builder.game2048.model.BoardModel;
-import com.tony.builder.game2048.util.AppExecutors;
 import com.tony.builder.game2048.viewmodel.event.CardGenEvent;
 import com.tony.builder.game2048.viewmodel.event.MergeEvent;
 import com.tony.builder.game2048.viewmodel.event.MoveEvent;
@@ -22,20 +21,16 @@ public class GameBoardViewModel extends ViewModel {
     private BoardModel boardModel;
 
     private MutableLiveData<Boolean> isGameFinished;
-
     private MutableLiveData<MergeEvent> mMergeEvent;
     private MutableLiveData<MoveEvent> mMoveEvent;
     private MutableLiveData<CardGenEvent> mCardGenEvent;
 
-    private AppExecutors executors;
-
-    public GameBoardViewModel(AppExecutors executors, BoardModel boardModel) {
-        this.executors = executors;
+    public GameBoardViewModel(BoardModel boardModel) {
+        this.boardModel = boardModel;
         setBoardModel(boardModel);
     }
 
     private void setBoardModel(BoardModel boardModel) {
-        this.boardModel = boardModel;
         boardModel.setBoardEventListener(new BoardModel.BoardEventListener() {
             @Override
             public void onBoardReset(int boardDimension) {
@@ -66,39 +61,29 @@ public class GameBoardViewModel extends ViewModel {
 
             @Override
             public void onCardMerged(final Point source, final Point sink, final int sourceValue, final int sinkValue) {
-                executors.mainThread().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        Log.d(TAG, "onCardMerged ["+source.getX()+","+source.getY()+"] = "+sourceValue+
-                                " -> ["+sink.getX()+","+sink.getY()+"] = "+sinkValue);
+                Log.d(TAG, "onCardMerged ["+source.getX()+","+source.getY()+"] = "+sourceValue+
+                        " -> ["+sink.getX()+","+sink.getY()+"] = "+sinkValue);
 
-                        if (mMergeEvent != null) {
-                            mMergeEvent.setValue(new MergeEvent(source, sink, sourceValue, sinkValue));
-                        }
+                if (mMergeEvent != null) {
+                    mMergeEvent.setValue(new MergeEvent(source, sink, sourceValue, sinkValue));
+                }
 
-                        if (mScore != null) {
-                            // merge will add to score, but move will not.
-                            Log.d(TAG, "mScore.getValue() = " + mScore.getValue() + " sinkvalue = " + sinkValue);
-                            // need to ensure currently is on main thread.
-                            mScore.setValue(mScore.getValue() + sinkValue);
-                        }
-                    }
-                });
+                if (mScore != null) {
+                    // merge will add to score, but move will not.
+                    Log.d(TAG, "mScore.getValue() = " + mScore.getValue() + " sinkvalue = " + sinkValue);
+                    // need to ensure currently is on main thread.
+                    mScore.setValue(mScore.getValue() + sinkValue);
+                }
             }
 
             @Override
             public void onCardMoved(final Point source, final Point sink, final int sourceValue, final int sinkValue) {
-                executors.mainThread().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        Log.d(TAG, "onCardMoved ["+source.getX()+","+source.getY()+"] = "+sourceValue+
-                                " -> ["+sink.getX()+","+sink.getY()+"] = "+sinkValue);
+                Log.d(TAG, "onCardMoved ["+source.getX()+","+source.getY()+"] = "+sourceValue+
+                        " -> ["+sink.getX()+","+sink.getY()+"] = "+sinkValue);
 
-                        if (mMoveEvent != null) {
-                            mMoveEvent.setValue(new MoveEvent(source, sink, sourceValue, sinkValue));
-                        }
-                    }
-                });
+                if (mMoveEvent != null) {
+                    mMoveEvent.setValue(new MoveEvent(source, sink, sourceValue, sinkValue));
+                }
             }
 
             @Override
@@ -200,32 +185,27 @@ public class GameBoardViewModel extends ViewModel {
     }
 
     public void onFling(final float velocityX, final float velocityY) {
-        executors.diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                Log.d(TAG, "onFling velocityX = "+velocityX+", velocityY = "+velocityY);
-                if (boardModel == null) {
-                    return;
-                }
-                if (Math.abs(velocityY) > Math.abs(velocityX)) {
-                    if (velocityY > 0) {
-                        Log.d(TAG, "boardModel.handleMotion(BoardModel.GameMotion.SWIPE_DOWN);");
-                        boardModel.handleMotion(BoardModel.GameMotion.SWIPE_DOWN);
-                    } else {
-                        Log.d(TAG, "boardModel.handleMotion(BoardModel.GameMotion.SWIPE_UP);");
-                        boardModel.handleMotion(BoardModel.GameMotion.SWIPE_UP);
-                    }
-                } else {
-                    if (velocityX > 0) {
-                        Log.d(TAG, "boardModel.handleMotion(BoardModel.GameMotion.SWIPE_RIGHT);");
-                        boardModel.handleMotion(BoardModel.GameMotion.SWIPE_RIGHT);
-                    } else {
-                        Log.d(TAG, "boardModel.handleMotion(BoardModel.GameMotion.SWIPE_LEFT);");
-                        boardModel.handleMotion(BoardModel.GameMotion.SWIPE_LEFT);
-                    }
-                }
+        Log.d(TAG, "onFling velocityX = "+velocityX+", velocityY = "+velocityY);
+        if (boardModel == null) {
+            return;
+        }
+        if (Math.abs(velocityY) > Math.abs(velocityX)) {
+            if (velocityY > 0) {
+                Log.d(TAG, "boardModel.handleMotion(BoardModel.GameMotion.SWIPE_DOWN);");
+                boardModel.handleMotion(BoardModel.GameMotion.SWIPE_DOWN);
+            } else {
+                Log.d(TAG, "boardModel.handleMotion(BoardModel.GameMotion.SWIPE_UP);");
+                boardModel.handleMotion(BoardModel.GameMotion.SWIPE_UP);
             }
-        });
+        } else {
+            if (velocityX > 0) {
+                Log.d(TAG, "boardModel.handleMotion(BoardModel.GameMotion.SWIPE_RIGHT);");
+                boardModel.handleMotion(BoardModel.GameMotion.SWIPE_RIGHT);
+            } else {
+                Log.d(TAG, "boardModel.handleMotion(BoardModel.GameMotion.SWIPE_LEFT);");
+                boardModel.handleMotion(BoardModel.GameMotion.SWIPE_LEFT);
+            }
+        }
     }
 
     public void onStartGame() {
@@ -233,11 +213,6 @@ public class GameBoardViewModel extends ViewModel {
         if (boardModel == null) {
             return;
         }
-        executors.diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                boardModel.startGame();
-            }
-        });
+        boardModel.startGame();
     }
 }
